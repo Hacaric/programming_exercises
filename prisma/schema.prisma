@@ -15,6 +15,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Tag {
+  id            Int
+  name          String
+  description   String
+  color_rgb     String?
+}
+
+model Activity {
+  id            Int      @id
+  name          String
+  description   String
+  tags          Tag[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  createdBy     User     @relation(fields: [createdById], references: [id])
+  createdById   String
+}
+
 model Post {
   id        String   @id @default(cuid())
   name      String
@@ -87,3 +107,5 @@ model Verification {
 
   @@map("verification")
 }
+
+
