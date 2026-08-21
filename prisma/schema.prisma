@@ -15,18 +15,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Tag {
-  id            Int
-  name          String
-  description   String
-  color_rgb     String?
+model ActivityAgeGroup {
+  parentActivity   ActivityTags @relation(fields: [parentActivityID], references: [id])
+  parentActivityID Int
+  name             String       @id
+  tagColor         String
+}
+
+model ActivityType {
+  parentActivity   ActivityTags @relation(fields: [parentActivityID], references: [id])
+  parentActivityID Int
+  name             String   @id
+  tagColor         String
+}
+
+model ActivityPreparation {
+  parentActivity   ActivityTags @relation(fields: [parentActivityID], references: [id])
+  parentActivityID Int
+  name             String   @id
+  tagColor         String
+}
+
+model Enviroment {
+  parentActivity   ActivityTags @relation(fields: [parentActivityID], references: [id])
+  parentActivityID Int
+  name             String   @id
+  tagColor         String
+}
+
+model ActivityTags {
+  id            Int      @id
+  activity      Activity @relation(fields: [activityID], references: [id])
+  activityID    Int      @unique
+  ageGroups     ActivityAgeGroup[]
+  activityType  ActivityType[]
+  preparation   ActivityPreparation[]
+  enviroments   Enviroment[]
 }
 
 model Activity {
   id            Int      @id
   name          String
   description   String
-  tags          Tag[]
+  tags          ActivityTags? 
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -58,6 +89,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
   posts         Post[]
+  createdActivities Activity[]
 
   @@unique([email])
   @@map("user")
