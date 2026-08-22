@@ -15,30 +15,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model DurationGruop {
+  name             String  @id
+  parentActivityTags   ActivityTags @relation(fields: [parentActivityTagsID], references: [id])
+  parentActivityTagsID Int
+  minDuration      DateTime
+  maxDuration      DateTime
+  tagColor         String
+}
+
 model ActivityAgeGroup {
-  parentActivity   ActivityTags @relation(fields: [parentActivityID], references: [id])
-  parentActivityID Int
+  parentActivityTags   ActivityTags @relation(fields: [parentActivityTagsID], references: [id])
+  parentActivityTagsID Int
   name             String       @id
   tagColor         String
 }
 
 model ActivityType {
-  parentActivity   ActivityTags @relation(fields: [parentActivityID], references: [id])
-  parentActivityID Int
+  parentActivityTags   ActivityTags @relation(fields: [parentActivityTagsID], references: [id])
+  parentActivityTagsID Int
   name             String   @id
   tagColor         String
 }
 
 model ActivityPreparation {
-  parentActivity   ActivityTags @relation(fields: [parentActivityID], references: [id])
-  parentActivityID Int
+  parentActivityTags   ActivityTags @relation(fields: [parentActivityTagsID], references: [id])
+  parentActivityTagsID Int
   name             String   @id
   tagColor         String
 }
 
 model Enviroment {
-  parentActivity   ActivityTags @relation(fields: [parentActivityID], references: [id])
-  parentActivityID Int
+  parentActivityTags   ActivityTags @relation(fields: [parentActivityTagsID], references: [id])
+  parentActivityTagsID Int
   name             String   @id
   tagColor         String
 }
