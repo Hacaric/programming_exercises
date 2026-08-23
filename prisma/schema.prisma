@@ -26,23 +26,23 @@ datasource db {
 model ActivityAgeGroup {
   name             String       @id
   tagColor         String
-  acitvityTags     ActivityTags[]
+  activityTags     ActivityTags[]
 }
 
 model ActivityType {
-  acitvityTags     ActivityTags[]
+  activityTags     ActivityTags[]
   name             String   @id
   tagColor         String
 }
 
 model ActivityPreparation {
-  acitvityTags     ActivityTags[]
+  activityTags     ActivityTags[]
   name             String   @id
   tagColor         String
 }
 
 model ActivityEnviroment {
-  acitvityTags     ActivityTags[]
+  activityTags     ActivityTags[]
   name             String   @id
   tagColor         String
 }
