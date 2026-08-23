@@ -22,8 +22,8 @@ async function main() {
   await prisma.activityAgeGroup.createMany({
       data: [
         {name: 'Vĺčatá a včielky', tagColor: '#ffff00'},
-        {name: 'Skauti', tagColor: '#00aa00'},
-        {name: 'Rangeri', tagColor: '#bd00c7'},
+        {name: 'Skauti', tagColor: '#00bb00'},
+        {name: 'Rangeri', tagColor: '#40008f'},
         {name: 'Roveri', tagColor: '#ff0909'},
         {name: 'Old skauti', tagColor: '#0963ff'},
     ]
@@ -43,7 +43,7 @@ async function main() {
   })
   await prisma.activityType.createMany({
     data: [
-        {name: 'Hra', tagColor: '#40008f'},
+        {name: 'Hra', tagColor: '#9f00a7'},
         {name: 'Duchovno', tagColor: '#7777b0'},
         {name: 'Zručnosti', tagColor: '#1b6c00'},
     ]
@@ -105,7 +105,7 @@ async function main() {
   await prisma.activity.create({
     data: {
       name: 'Avalon',
-      description: 'Avalon je hra, ktorá ...',
+      description: 'Avalon je hra, ktorá je super! Raz som ju hral a povedol som si: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ultricies placerat lobortis. Nunc quam erat, ultrices dapibus ultricies eget, lobortis mollis ligula. Duis nibh purus, tristique at porttitor vitae, tristique vel dui. Duis a magna ipsum. Suspendisse potenti. Ut orci arcu, accumsan maximus laoreet volutpat, pharetra ac augue. Vestibulum lectus neque, venenatis et purus eu, tempus scelerisque lacus. Ut eleifend faucibus tristique. Aenean blandit luctus enim. Morbi eget odio lorem. Praesent nec accumsan massa. Proin feugiat lectus sed ante dictum efficitur. Nam feugiat velit sed augue auctor, id feugiat tortor auctor. Nunc ex eros, hendrerit ac tempus sit amet, vestibulum sit amet lectus. Proin tincidunt enim eget purus luctus, a rhoncus urna molestie.',
       createdBy: {
         connect: { id: user.id },
       },
@@ -114,7 +114,7 @@ async function main() {
           minDuration: new Date('1970-01-01T00:15:00.000Z'), // 15 minutes
           maxDuration: new Date('1970-01-01T00:45:00.000Z'), // 45 minutes
           ageGroups: {
-            connect: [{ name: 'Skauti' }],
+            connect: [{ name: 'Skauti' }, {name: 'Rangeri'}],
           },
           enviroments: {
             connect: [{ name: 'Na vnútro' }],

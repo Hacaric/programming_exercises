@@ -63,7 +63,7 @@ model ActivityTags {
 model Activity {
   id            Int      @id @default(autoincrement())
   name          String
-  description   String
+  description   String   @db.Text // @db.Text to allow long strings
   tags          ActivityTags? 
 
   createdAt     DateTime @default(now())
