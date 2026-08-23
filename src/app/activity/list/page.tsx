@@ -3,13 +3,20 @@ import { GetActivityTags } from "./actions";
 import type { ReactNode } from "react";
 
 function ActivityTag(name: string, color: string) {
-    return <div key={name} className={`font-xs border-1 border-[${color}]`}>{name}</div>
+    return <div 
+        key = {name} 
+        className = 'text-[11px] border-2 rounded-xl px-1' 
+        // Note: we seed to use the style attribute, because tailwindcss has problems with dynamically generating colors
+        // We apply the color to border and make background the same color with smaller opacity
+        style = {{borderColor: color, backgroundColor: `${color}0f`}}>
+            {name}
+        </div>
 }
 
 function ActivityElement(name: string, description: string, tags: Array<ReactNode>) {
     return <div key={name} className="border-1 border-black ">
-        <p className="font-bg">{name}</p>
-        <p className="font-sm">{description}</p>
+        <p className="text-xl font-bold">{name}</p>
+        <p className="text-sm">{description.length > 50 ? description.substring(0, 50)+'...' : description}</p>
         <div className="flex">{tags}</div>
     </div>
 }
