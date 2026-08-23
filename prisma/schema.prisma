@@ -15,55 +15,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model DurationGruop {
-  name             String  @id
-  parentActivityTags   ActivityTags @relation(fields: [parentActivityTagsID], references: [id])
-  parentActivityTagsID Int
-  minDuration      DateTime
-  maxDuration      DateTime
-  tagColor         String
-}
+// model ActivityDurationGruop {
+//  name             String  @id
+//  acitvityTags     ActivityTags[]
+//  minDuration      DateTime
+//  maxDuration      DateTime
+//  tagColor         String
+// }
 
 model ActivityAgeGroup {
-  parentActivityTags   ActivityTags @relation(fields: [parentActivityTagsID], references: [id])
-  parentActivityTagsID Int
   name             String       @id
   tagColor         String
+  acitvityTags     ActivityTags[]
 }
 
 model ActivityType {
-  parentActivityTags   ActivityTags @relation(fields: [parentActivityTagsID], references: [id])
-  parentActivityTagsID Int
+  acitvityTags     ActivityTags[]
   name             String   @id
   tagColor         String
 }
 
 model ActivityPreparation {
-  parentActivityTags   ActivityTags @relation(fields: [parentActivityTagsID], references: [id])
-  parentActivityTagsID Int
+  acitvityTags     ActivityTags[]
   name             String   @id
   tagColor         String
 }
 
-model Enviroment {
-  parentActivityTags   ActivityTags @relation(fields: [parentActivityTagsID], references: [id])
-  parentActivityTagsID Int
+model ActivityEnviroment {
+  acitvityTags     ActivityTags[]
   name             String   @id
   tagColor         String
 }
 
 model ActivityTags {
-  id            Int      @id
+  id            Int      @id @default(autoincrement())
   activity      Activity @relation(fields: [activityID], references: [id])
   activityID    Int      @unique
   ageGroups     ActivityAgeGroup[]
   activityType  ActivityType[]
   preparation   ActivityPreparation[]
-  enviroments   Enviroment[]
+  enviroments   ActivityEnviroment[]
+//  durationGruop ActivityDurationGruop[]
+  minDuration   DateTime
+  maxDuration   DateTime
 }
 
 model Activity {
-  id            Int      @id
+  id            Int      @id @default(autoincrement())
   name          String
   description   String
   tags          ActivityTags? 
