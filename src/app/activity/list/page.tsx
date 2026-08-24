@@ -1,7 +1,36 @@
 import { prisma } from "lib/prisma";
 import { GetActivityTags } from "./actions";
 import type { ReactNode } from "react";
-import { assert } from "console";
+import type { Activity } from "generated/prisma";
+
+export async function getActivityTagsJSX(activity: Activity) {
+    const tags = await GetActivityTags(activity.id);
+    if (!tags) {
+        return [];
+    }
+    const tags_elemets = [];
+    tags_elemets.push(
+        tags.activityType.map(
+            (tag) => ActivityTag(tag.name, tag.tagColor)
+        )
+    );
+    tags_elemets.push(
+        tags.ageGroups.map(
+            (tag) => ActivityTag(tag.name, tag.tagColor)
+        )
+    );
+    tags_elemets.push(
+        tags.enviroments.map(
+            (tag) => ActivityTag(tag.name, tag.tagColor)
+        )
+    );
+    tags_elemets.push(
+        tags.preparation.map(
+            (tag) => ActivityTag(tag.name, tag.tagColor)
+        )
+    );
+    return tags_elemets;
+}
 
 interface Color {
     red: number,
@@ -87,44 +116,22 @@ function ActivityTag(name: string, color: string) {
         </div>
 }
 
-function ActivityElement(name: string, description: string, tags: Array<ReactNode>) {
-    const MAX_DESCRIPTION_PREVIEW_LENGHT = 175;
-    return <div key={name} className="grid border-2 border-black p-2 rounded-md flex-initial w-90 h-60">
-        <div className="text-align-center"><p className="text-2xl font-bold">{name}</p></div>
-        <p className="text-md align-top">{description.length > MAX_DESCRIPTION_PREVIEW_LENGHT ? description.substring(0, MAX_DESCRIPTION_PREVIEW_LENGHT)+'...' : description}</p>
+function ActivityElement(id: number, name: string, description: string, tags: Array<ReactNode>) {
+    const MAX_DESCRIPTION_PREVIEW_LENGHT = 170;
+    return <a href={`/activity/${id}`}><div key={id} className="grid border-2 border-black p-2 rounded-md flex-initial w-90 h-55 hover:mt-1 hover:bg-[#f4f4f4] cursor-pointer">
+        <div>
+            <div className="text-align-center ml-1"><p className="text-2xl font-bold">{name}</p></div>
+            <p className="text-md align-top m-1">{description.length > MAX_DESCRIPTION_PREVIEW_LENGHT ? description.substring(0, MAX_DESCRIPTION_PREVIEW_LENGHT)+'...' : description}</p>
+        </div>
         <div className="flex flex-wrap gap-x-0.5 gap-y-1 mt-3 content-end">{tags}</div>
-    </div>
+    </div></a>
 }
 
 export default async function ListActivities() {
     const activities = (await prisma.activity.findMany()).map(
         async (activity) => {
-            const tags = await GetActivityTags(activity.id);
-            if (!tags) {
-                return null;
-            }
-            const tags_elemets = [];
-            tags_elemets.push(
-                tags.activityType.map(
-                    (tag) => ActivityTag(tag.name, tag.tagColor)
-                )
-            );
-            tags_elemets.push(
-                tags.ageGroups.map(
-                    (tag) => ActivityTag(tag.name, tag.tagColor)
-                )
-            );
-            tags_elemets.push(
-                tags.enviroments.map(
-                    (tag) => ActivityTag(tag.name, tag.tagColor)
-                )
-            );
-            tags_elemets.push(
-                tags.preparation.map(
-                    (tag) => ActivityTag(tag.name, tag.tagColor)
-                )
-            );
-            return ActivityElement(activity.name, activity.description, tags_elemets);
+            const tags = await getActivityTagsJSX(activity);
+            return ActivityElement(activity.id, activity.name, activity.description, tags);
         }
     );
     return <div className="flex gap-4 p-10">
