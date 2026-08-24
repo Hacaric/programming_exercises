@@ -3,4 +3,13 @@
 @theme {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  
+    
+}
+.navbar_link {
+  font-weight: normal;
+  text-decoration: none;  
+}
+.navbar_link:hover {
+  cursor: pointer;
 }

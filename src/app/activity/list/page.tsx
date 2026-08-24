@@ -2,6 +2,7 @@ import { prisma } from "lib/prisma";
 import { GetActivityTags } from "./actions";
 import type { ReactNode } from "react";
 import type { Activity } from "generated/prisma";
+import { LOREM_IPSUM } from "~/app/utils";
 
 export async function getActivityTagsJSX(activity: Activity) {
     const tags = await GetActivityTags(activity.id);
@@ -136,5 +137,6 @@ export default async function ListActivities() {
     );
     return <div className="flex gap-4 p-10">
         {activities}
+        {LOREM_IPSUM}
     </div>
 }

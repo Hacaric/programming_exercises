@@ -13,6 +13,6 @@ export default async function ActivityDetail({ params }: { params: { id: string 
         <div className="text-align-center ml-1"><p className="text-2xl font-bold">{activity.name}</p></div>
         <div className="flex flex-wrap gap-x-0.5 gap-y-1 mt-3 content-end">{tags}</div>
         <p className="font-bold pt-5 ml-1">Popis:</p>
-        <p className="text-md align-top ml-2">{activity.description}</p>
+        <p className="text-md align-top m-2">{activity.description}</p>
     </div>
 }
