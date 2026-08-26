@@ -1,6 +1,6 @@
 import { getActivityTagsJSX } from "~/app/list/activity";
 import { GetActivity } from "../../list/actions"
-
+// TODO: increase activity.views counter
 
 export default async function ActivityDetail({ params }: { params: { id: string } }) {
     const { id: id_raw } = await params;

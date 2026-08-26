@@ -1,4 +1,4 @@
-
+'use server'
 import { GetActivityTags } from "./actions";
 import type { ReactNode } from "react";
 import type { Activity } from "generated/prisma";
@@ -101,7 +101,7 @@ function calculate_RGB_from_RGBA_on_white_background(color: string|Color): Color
     return result;
 }
 
-function ActivityTag(name: string, color: string) {
+async function ActivityTag(name: string, color: string) {
     const backgroundOpacity = 64;
     if (!(0 <= backgroundOpacity && backgroundOpacity <= 255)) {
         return <div className="text-[11px] border-2 rounded-xl px-1">Error loading tag: invalid backgroundOpacity value.</div>
@@ -117,7 +117,7 @@ function ActivityTag(name: string, color: string) {
         </div>
 }
 
-export function ActivityElement(id: number, name: string, description: string, tags: Array<ReactNode>) {
+export async function ActivityElement(id: number, name: string, description: string, tags: Array<ReactNode>) {
     const MAX_DESCRIPTION_PREVIEW_LENGHT = 170;
     return <div key={id} className="flex-none grow border-2 border-black rounded-md w-80 h-60 mt-1 hover:mt-0 hover:mb-1 hover:bg-[#f4f4f4] cursor-pointer">
         <a href={`/activity/${id}`} className="grid p-2 h-full">

@@ -22,7 +22,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable}`}>
       <head>
-        <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css" />
         {/*link:favicon - This is needed because next will replace the icon with default one for some reason even when favincon is defined in metadata
         TODO: remove this link; look at https://stackoverflow.com/questions/75832964/nextjs-13-overwrites-my-favicon-with-its-default-one */}
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />

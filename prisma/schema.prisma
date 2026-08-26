@@ -65,6 +65,8 @@ model Activity {
   name          String
   description   String   @db.Text // @db.Text to allow long strings
   tags          ActivityTags? 
+  
+  views         Int      @default(0)
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
