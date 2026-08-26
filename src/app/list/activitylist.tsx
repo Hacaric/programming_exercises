@@ -20,7 +20,11 @@ export function ActivityList(props: {initialData: JSX.Element[]}) {
         });
     }, [query]);
     return <div className="flex justify-center-safe flex-wrap gap-4 p-10 content-start">
-            {activities}
+            {isPending && <p>Loading...</p>}
+            {!isPending && activities}
+            {!isPending && activities.length == 0 && query != '' &&
+                <p>No activity found for query '{query}'</p>
+            }
     </div>
 }
 

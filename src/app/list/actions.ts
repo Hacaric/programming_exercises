@@ -39,21 +39,37 @@ function countSubstrngOccurences(main: string, searchString: string) {
 }
 
 function scoreQueryMatches(activity: Activity, query: string|undefined) {
-    const NAME_MATCH_WEIGHT = 5;
+    const NAME_MATCH_WEIGHT = 15;
     const DESCRIPTION_MATCH_WEIGHT = 1;
 
 
     if (!query || query == '') {return {activity, match_score: 1};}
-    console.log(`Scoring query '${query}' against acitvity name '${activity.name}'...`)
+    console.debug(`Scoring query '${query}' against acitvity name '${activity.name}'...`)
     const keywords = query.toLowerCase().split(' ');
     var score = 0;
+    var failed_required = false;
     keywords.forEach((keyword) => {
-        score += NAME_MATCH_WEIGHT * countSubstrngOccurences(activity.name.toLowerCase(), keyword)
+        if (failed_required) { return; }
+        let required = keyword[0]=='"' && keyword[keyword.length-1]=='"';
+        if (required) {
+            keyword = keyword.substring(1, keyword.length-1);
+            console.debug(`Found required keyword: ${keyword}`)
+        }
+        const occurences_name = countSubstrngOccurences(activity.name.toLowerCase(), keyword)
+        const occurences_desc = countSubstrngOccurences(activity.description.toLowerCase(), keyword)
+        if (required && (occurences_name == 0 && occurences_desc == 0)) {
+            console.debug(`Failed to find required keyword: ${keyword}`)
+            failed_required = true;
+            return;
+        }
+        score += NAME_MATCH_WEIGHT * occurences_name;
+        score += DESCRIPTION_MATCH_WEIGHT * occurences_desc;
     })
-    keywords.forEach((keyword) => {
-        score += DESCRIPTION_MATCH_WEIGHT * countSubstrngOccurences(activity.description.toLowerCase(), keyword)
-    })
-    console.log(`Found ${score} matches.`);
+    if (failed_required) {
+        console.debug(`Match score: 0 (failed to find required keyword)`)
+        return {activity, match_score: 0};
+    }
+    console.debug(`Match score: ${score}.`);
     return {activity, match_score: score}
 }
 
@@ -71,7 +87,7 @@ export async function GetActivities(query?: string): Promise<JSX.Element[]> {
             ({activity, match_score}) => match_score > 0
         )
         .sort(
-            ({activity, match_score}) => match_score
+            (a, b) => b.match_score - a.match_score
         )
         .map(
         async ({activity, match_score}) => {
