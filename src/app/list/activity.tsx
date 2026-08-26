@@ -1,8 +1,8 @@
-import { prisma } from "lib/prisma";
+
 import { GetActivityTags } from "./actions";
 import type { ReactNode } from "react";
 import type { Activity } from "generated/prisma";
-import { LOREM_IPSUM } from "~/app/utils";
+
 
 export async function getActivityTagsJSX(activity: Activity) {
     const tags = await GetActivityTags(activity.id);
@@ -117,26 +117,15 @@ function ActivityTag(name: string, color: string) {
         </div>
 }
 
-function ActivityElement(id: number, name: string, description: string, tags: Array<ReactNode>) {
+export function ActivityElement(id: number, name: string, description: string, tags: Array<ReactNode>) {
     const MAX_DESCRIPTION_PREVIEW_LENGHT = 170;
-    return <a href={`/activity/${id}`}><div key={id} className="grid border-2 border-black p-2 rounded-md flex-initial w-90 h-55 hover:mt-1 hover:bg-[#f4f4f4] cursor-pointer">
+    return <div key={id} className="flex-none grow border-2 border-black rounded-md w-80 h-60 mt-1 hover:mt-0 hover:mb-1 hover:bg-[#f4f4f4] cursor-pointer">
+        <a href={`/activity/${id}`} className="grid p-2 h-full">
         <div>
             <div className="text-align-center ml-1"><p className="text-2xl font-bold">{name}</p></div>
             <p className="text-md align-top m-1">{description.length > MAX_DESCRIPTION_PREVIEW_LENGHT ? description.substring(0, MAX_DESCRIPTION_PREVIEW_LENGHT)+'...' : description}</p>
         </div>
         <div className="flex flex-wrap gap-x-0.5 gap-y-1 mt-3 content-end">{tags}</div>
-    </div></a>
-}
-
-export default async function ListActivities() {
-    const activities = (await prisma.activity.findMany()).map(
-        async (activity) => {
-            const tags = await getActivityTagsJSX(activity);
-            return ActivityElement(activity.id, activity.name, activity.description, tags);
-        }
-    );
-    return <div className="flex gap-4 p-10">
-        {activities}
-        {LOREM_IPSUM}
+        </a>
     </div>
 }

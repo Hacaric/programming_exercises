@@ -3,6 +3,7 @@ config();
 
 import { PrismaClient } from "../generated/prisma/client";
 import { error } from "console";
+import { LOREM_IPSUM } from "~/app/utils";
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
@@ -105,7 +106,34 @@ async function main() {
   await prisma.activity.create({
     data: {
       name: 'Avalon',
-      description: 'Avalon je hra, ktorá je super! Raz som ju hral a povedol som si: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ultricies placerat lobortis. Nunc quam erat, ultrices dapibus ultricies eget, lobortis mollis ligula. Duis nibh purus, tristique at porttitor vitae, tristique vel dui. Duis a magna ipsum. Suspendisse potenti. Ut orci arcu, accumsan maximus laoreet volutpat, pharetra ac augue. Vestibulum lectus neque, venenatis et purus eu, tempus scelerisque lacus. Ut eleifend faucibus tristique. Aenean blandit luctus enim. Morbi eget odio lorem. Praesent nec accumsan massa. Proin feugiat lectus sed ante dictum efficitur. Nam feugiat velit sed augue auctor, id feugiat tortor auctor. Nunc ex eros, hendrerit ac tempus sit amet, vestibulum sit amet lectus. Proin tincidunt enim eget purus luctus, a rhoncus urna molestie.',
+      description: `Avalon je hra, ktorá je super! Raz som ju hral a povedal som si: ${LOREM_IPSUM}`,
+      createdBy: {
+        connect: { id: user.id },
+      },
+      tags: {
+        create: {
+          minDuration: new Date('1970-01-01T00:15:00.000Z'), // 15 minutes
+          maxDuration: new Date('1970-01-01T00:45:00.000Z'), // 45 minutes
+          ageGroups: {
+            connect: [{ name: 'Skauti' }, {name: 'Rangeri'}],
+          },
+          enviroments: {
+            connect: [{ name: 'Na vnútro' }],
+          },
+          preparation: {
+            connect: [{ name: 'Jednoduchá príprava' }],
+          },
+          activityType: {
+            connect: [{ name: 'Hra' }],
+          },
+        },
+      },
+    },
+  })
+  await prisma.activity.create({
+    data: {
+      name: 'Ahoj ako sa máš',
+      description: `Ahoj ako sa máš je aktivita, ktorá sa hodí na začiatok družinovky. ${LOREM_IPSUM}`,
       createdBy: {
         connect: { id: user.id },
       },
