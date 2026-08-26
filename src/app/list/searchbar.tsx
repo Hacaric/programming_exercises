@@ -1,12 +1,14 @@
-'use client';
+"use client";
 
 import { useState, type ReactNode } from "react";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from "next/navigation";
 
 export function SearchBar() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [query, setQuery] = useState<string>(searchParams.get('q')?.toString() ?? '')
+    const [query, setQuery] = useState<string>(
+        searchParams.get("q")?.toString() ?? "",
+    );
 
     function handleSearch(query_: string) {
         // we need query here, because setQuery(...); handleSearch(), in this case the setQuery is somehow async and is not changed when the handleSearch function is called
@@ -16,7 +18,7 @@ export function SearchBar() {
         if (query_) {
             params.set('q', query_);
         } else {
-            params.delete('q');
+            params.delete("q");
         }
         router.push(`?${params.toString()}`);
     }
@@ -61,5 +63,3 @@ export function SearchBar() {
             {/* <div className="w-[1px] bg-black h-7 self-center mx-2"></div> */}
         </form>
 }
-
-

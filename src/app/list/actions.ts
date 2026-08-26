@@ -1,20 +1,24 @@
-'use server';
+"use server";
 import { ActivityElement, getActivityTagsJSX } from "./activity";
 import type { Activity, ActivityTags } from "generated/prisma";
 import { prisma } from "lib/prisma";
 import type { JSX } from "react";
 
-export async function GetActivity(id: number): Promise<Activity&{tags: ActivityTags|null} | null> {
+export async function GetActivity(
+    id: number,
+): Promise<(Activity & { tags: ActivityTags | null }) | null> {
     const activity = await prisma.activity.findUnique({
-        where: {id: id},
-        include: {tags: true}
-    })
+        where: { id: id },
+        include: { tags: true },
+    });
     if (!activity) {
-        console.warn(`Warning: Activity not found (id: ${id})`)
+        console.warn(`Warning: Activity not found (id: ${id})`);
         return null;
     }
     if (!activity.tags) {
-        console.error(`Error: Activity (id: ${id}) defiend incorrecty, cannot be used: Missing ActivityTags.`)
+        console.error(
+            `Error: Activity (id: ${id}) defiend incorrecty, cannot be used: Missing ActivityTags.`,
+        );
         return null;
     }
     return activity;
@@ -22,14 +26,21 @@ export async function GetActivity(id: number): Promise<Activity&{tags: ActivityT
 
 export async function GetActivityTags(id: number) {
     const activity = await GetActivity(id);
-    if (!activity || !activity.tags ||!activity.tags?.id) {
+    if (!activity || !activity.tags || !activity.tags?.id) {
         return null;
     }
     const activityTags = await prisma.activityTags.findUnique({
-        where: {id: activity.tags.id},
-        include: {activityType: true, ageGroups: true, enviroments: true, preparation: true}
-    })
-    if (!activityTags) {return null;}
+        where: { id: activity.tags.id },
+        include: {
+            activityType: true,
+            ageGroups: true,
+            enviroments: true,
+            preparation: true,
+        },
+    });
+    if (!activityTags) {
+        return null;
+    }
     return activityTags;
 }
 
@@ -42,10 +53,13 @@ function scoreQueryMatches(activity: Activity, query: string|undefined) {
     const NAME_MATCH_WEIGHT = 15;
     const DESCRIPTION_MATCH_WEIGHT = 1;
 
-
-    if (!query || query == '') {return {activity, match_score: 1};}
-    console.debug(`Scoring query '${query}' against acitvity name '${activity.name}'...`)
-    const keywords = query.toLowerCase().split(' ');
+    if (!query || query == "") {
+        return { activity, match_score: 1 };
+    }
+    console.log(
+        `Scoring query '${query}' against acitvity name '${activity.name}'...`,
+    );
+    const keywords = query.toLowerCase().split(" ");
     var score = 0;
     var failed_required = false;
     keywords.forEach((keyword) => {
@@ -74,7 +88,7 @@ function scoreQueryMatches(activity: Activity, query: string|undefined) {
 }
 
 export async function GetActivities(query?: string): Promise<JSX.Element[]> {
-    // 
+    //
     //   !!! WATCH OUT !!! BAD CODE AHEAD, pls rewrite
     //
 
@@ -96,6 +110,4 @@ export async function GetActivities(query?: string): Promise<JSX.Element[]> {
         }
     ))
     return activities;
-} 
-
-
+}
