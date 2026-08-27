@@ -1,31 +1,21 @@
 export function Navbar() {
-    const LOGO_SIZE: number = 45;
-    const CENTER_NAVBAR: boolean = false;
-
+    const linkStyle = "cursor-pointer hover:text-slsk-yellow transition-colors duration-100"
     return (
         <div
-            className={`static flex rounded-xl border bg-red-100 ${CENTER_NAVBAR && "place-content-center"} h-14 py-0 pr-10 pl-5`}
+            className="flex gap-5 bg-slsk-blue-dark text-white font-bold h-16 rounded-2xl p-2 px-4 items-center"
         >
             <a href="/" className="content-center">
                 <img
                     src="/logo.png"
                     alt="Logo"
-                    width={LOGO_SIZE}
-                    height={LOGO_SIZE}
-                    className="flex-none"
+                    className="flex-none size-13 bg-white rounded-full p-1"
                 />
             </a>
-            <div className="flex items-center">
-                <div className="mx-5 h-[70%] w-[1px] bg-black"></div>
-            </div>
             <div className="flex items-center gap-5">
-                <a href="/" className="navbar_link">
-                    Domov
-                </a>
-                <a href="/list" className="navbar_link">
+                <a href="/list" className={linkStyle}>
                     Aktivity
                 </a>
-                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" className={linkStyle}>
                     REZNE ZDARMA
                 </a>
             </div>

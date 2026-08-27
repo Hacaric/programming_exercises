@@ -1,26 +1,21 @@
-@import url("https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap"); /* Georama font */
+@import url("https://fonts.googleapis.com/css2?family=Georama:wght@400;500;600;700;800&display=swap")
+layer(base);
 @import "tailwindcss";
 
 @theme {
-    --font-sans:
-        "Georama", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji",
-        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --font-serif:
-        "Georama", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-    --font-mono:
-        "Georama", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-        "Liberation Mono", "Courier New", monospace;
+    --default-font-family: "Georama";
+    --default-mono-font-family: "Georama";
 
-    --color-slsk-blue: #00b5e2;
-    --color-slsk-dark-blue: #002855;
-    --color-slsk-orange: #f2a900;
-    --color-slsk-neutral: #fce9bf;
-}
-.navbar_link {
-    font-weight: normal;
-    text-decoration: none;
-}
-.navbar_link:hover {
-    cursor: pointer;
+    --color-slsk-purple-dark: rgb(112, 47, 138);
+    --color-slsk-purple-light: rgb(181, 128, 209);
+    --color-slsk-blue-dark: rgb(0, 40, 85);
+    --color-slsk-blue-mid: rgb(0, 75, 135);
+    --color-slsk-blue-light: rgb(0, 181, 226);
+    --color-slsk-yellow: rgb(242, 169, 0);
+    --color-slsk-orange: rgb(237, 139, 0);
+    --color-slsk-red: rgb(224, 60, 49);
+    --color-slsk-green-light: rgb(114, 191, 68);
+    --color-slsk-green-dark: rgb(0, 150, 94);
+    --color-slsk-brown: rgb(139, 91, 41);
+    --color-slsk-sand: rgb(252, 233, 191);
 }
