@@ -31,7 +31,7 @@ export function SearchBar() {
     return (
         <form
             onSubmit={handleSubmit}
-            className="flex border-2 border-slsk-blue-dark text-slsk-blue-dark rounded-2xl items-center pl-2 gap-2  h-10"
+            className="border-slsk-blue-dark text-slsk-blue-dark flex h-10 items-center gap-2 rounded-2xl border-2 pl-2"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +54,7 @@ export function SearchBar() {
                     setQuery(e.target.value);
                 }}
                 type="text"
-                className="outline-none font-2xl flex-1 font-semibold"
+                className="font-2xl flex-1 font-semibold outline-none"
                 placeholder="Hľadať..."
             />
             {/* <button type="submit" className="justify-self-end pr-1 pl-2 font-bold">&#8629;</button> */}
@@ -65,12 +65,12 @@ export function SearchBar() {
                         setQuery("");
                         handleSearch("");
                     }}
-                    className="mx-2 cursor-pointer "
+                    className="mx-2 cursor-pointer"
                 >
                     &#10006;
                 </button>
             )}
-            <button className="font-bold  border-l-2 border-l-slsk-blue-dark px-4 h-full">
+            <button className="border-l-slsk-blue-dark h-full border-l-2 px-4 font-bold">
                 Search
             </button>
             {/* <div className="w-[1px] bg-black h-7 self-center mx-2"></div> */}
