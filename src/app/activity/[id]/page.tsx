@@ -7,7 +7,7 @@ export default async function ActivityDetail({
 }: {
     params: { id: string };
 }) {
-    const { id: id_raw } = await params;
+    const { id: id_raw } = params;
     const id = Number(id_raw);
     if (isNaN(id)) {
         return (
@@ -24,15 +24,17 @@ export default async function ActivityDetail({
 
     const tags = getActivityTagsJSX(activity);
     return (
-        <div className="mx-50 my-20 rounded-2xl border-1 p-5">
-            <div className="text-align-center ml-1">
-                <p className="text-2xl font-bold">{activity.name}</p>
+        <div className="border-slsk-blue-dark flex flex-col gap-2 rounded-2xl border-2 p-5">
+            <div className="text-align-center">
+                <h3 className="text-3xl font-bold">{activity.name}</h3>
             </div>
-            <div className="mt-3 flex flex-wrap content-end gap-x-0.5 gap-y-1">
+            <div className="flex flex-wrap content-end gap-x-0.5 gap-y-1">
                 {tags}
             </div>
-            <p className="ml-1 pt-5 font-bold">Popis:</p>
-            <p className="text-md m-2 align-top">{activity.description}</p>
+            <div>
+                <h5 className="text-lg font-bold">Popis:</h5>
+                <p className="text-md ml-2">{activity.description}</p>
+            </div>
         </div>
     );
 }
