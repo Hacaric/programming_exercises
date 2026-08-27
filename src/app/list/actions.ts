@@ -49,7 +49,7 @@ function countSubstrngOccurences(main: string, searchString: string) {
     return count;
 }
 
-function scoreQueryMatches(activity: Activity, query: string|undefined) {
+function scoreQueryMatches(activity: Activity, query: string | undefined) {
     const NAME_MATCH_WEIGHT = 15;
     const DESCRIPTION_MATCH_WEIGHT = 1;
 
@@ -63,28 +63,36 @@ function scoreQueryMatches(activity: Activity, query: string|undefined) {
     var score = 0;
     var failed_required = false;
     keywords.forEach((keyword) => {
-        if (failed_required) { return; }
-        let required = keyword[0]=='"' && keyword[keyword.length-1]=='"';
-        if (required) {
-            keyword = keyword.substring(1, keyword.length-1);
-            console.debug(`Found required keyword: ${keyword}`)
+        if (failed_required) {
+            return;
         }
-        const occurences_name = countSubstrngOccurences(activity.name.toLowerCase(), keyword)
-        const occurences_desc = countSubstrngOccurences(activity.description.toLowerCase(), keyword)
-        if (required && (occurences_name == 0 && occurences_desc == 0)) {
-            console.debug(`Failed to find required keyword: ${keyword}`)
+        let required = keyword[0] == '"' && keyword[keyword.length - 1] == '"';
+        if (required) {
+            keyword = keyword.substring(1, keyword.length - 1);
+            console.debug(`Found required keyword: ${keyword}`);
+        }
+        const occurences_name = countSubstrngOccurences(
+            activity.name.toLowerCase(),
+            keyword,
+        );
+        const occurences_desc = countSubstrngOccurences(
+            activity.description.toLowerCase(),
+            keyword,
+        );
+        if (required && occurences_name == 0 && occurences_desc == 0) {
+            console.debug(`Failed to find required keyword: ${keyword}`);
             failed_required = true;
             return;
         }
         score += NAME_MATCH_WEIGHT * occurences_name;
         score += DESCRIPTION_MATCH_WEIGHT * occurences_desc;
-    })
+    });
     if (failed_required) {
-        console.debug(`Match score: 0 (failed to find required keyword)`)
-        return {activity, match_score: 0};
+        console.debug(`Match score: 0 (failed to find required keyword)`);
+        return { activity, match_score: 0 };
     }
     console.debug(`Match score: ${score}.`);
-    return {activity, match_score: score}
+    return { activity, match_score: score };
 }
 
 export async function GetActivities(query?: string): Promise<JSX.Element[]> {
@@ -93,21 +101,20 @@ export async function GetActivities(query?: string): Promise<JSX.Element[]> {
     //
 
     // TODO: not pull every activity, only a fixed amount
-    const activities = await Promise.all((await prisma.activity.findMany())
-        .map(
-            (activity) => scoreQueryMatches(activity, query)
-        )
-        .filter(
-            ({activity, match_score}) => match_score > 0
-        )
-        .sort(
-            (a, b) => b.match_score - a.match_score
-        )
-        .map(
-        async ({activity, match_score}) => {
-            const tags = await getActivityTagsJSX(activity);
-            return await ActivityElement(activity.id, activity.name, activity.description, tags);
-        }
-    ))
+    const activities = await Promise.all(
+        (await prisma.activity.findMany())
+            .map((activity) => scoreQueryMatches(activity, query))
+            .filter(({ activity, match_score }) => match_score > 0)
+            .sort((a, b) => b.match_score - a.match_score)
+            .map(async ({ activity, match_score }) => {
+                const tags = await getActivityTagsJSX(activity);
+                return await ActivityElement(
+                    activity.id,
+                    activity.name,
+                    activity.description,
+                    tags,
+                );
+            }),
+    );
     return activities;
 }

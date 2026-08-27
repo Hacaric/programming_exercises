@@ -4,7 +4,7 @@ export function Navbar() {
 
     return (
         <div
-            className={`static m-2 mx-3 flex rounded-xl border-1 bg-red-100 ${CENTER_NAVBAR && "place-content-center"} h-14 py-0 pr-10 pl-5`}
+            className={`static flex rounded-xl border bg-red-100 ${CENTER_NAVBAR && "place-content-center"} h-14 py-0 pr-10 pl-5`}
         >
             <a href="/" className="content-center">
                 <img
