@@ -142,23 +142,23 @@ export async function ActivityElement(
     return (
         <div
             key={id}
-            className="mt-1 h-60 w-80 flex-none grow cursor-pointer rounded-md border-2 border-black hover:mt-0 hover:mb-1 hover:bg-[#f4f4f4]"
+            className="border-2 border-slsk-blue-dark rounded-md h-60 min-w-80 flex-1 hover:shadow-lg hover:bg-gray-100 transition-all duration-150"
         >
-            <a href={`/activity/${id}`} className="grid h-full p-2">
+            <a href={`/activity/${id}`} className="flex flex-col h-full p-2">
                 <div>
                     <div className="text-align-center ml-1">
                         <p className="text-2xl font-bold">{name}</p>
                     </div>
-                    <p className="text-md m-1 align-top">
+                    <p className="text-md m-1">
                         {description.length > MAX_DESCRIPTION_PREVIEW_LENGHT
                             ? description.substring(
-                                  0,
-                                  MAX_DESCRIPTION_PREVIEW_LENGHT,
-                              ) + "..."
+                                0,
+                                MAX_DESCRIPTION_PREVIEW_LENGHT,
+                            ) + "..."
                             : description}
                     </p>
                 </div>
-                <div className="mt-3 flex flex-wrap content-end gap-x-0.5 gap-y-1">
+                <div className="flex flex-wrap mt-auto gap-x-0.5 gap-y-1">
                     {tags}
                 </div>
             </a>
