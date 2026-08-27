@@ -142,7 +142,7 @@ export async function ActivityElement(
     return (
         <div
             key={id}
-            className="border-slsk-blue-dark h-60 min-w-80 flex-1 rounded-md border-2 transition-all duration-150 hover:bg-gray-100 hover:shadow-lg"
+            className="border-slsk-blue-dark h-60 min-w-80 flex-1 rounded-md border-2 overflow-hidden transition-all duration-150 hover:bg-gray-100 hover:shadow-lg"
         >
             <a href={`/activity/${id}`} className="flex h-full flex-col p-2">
                 <div>
@@ -152,9 +152,9 @@ export async function ActivityElement(
                     <p className="text-md m-1">
                         {description.length > MAX_DESCRIPTION_PREVIEW_LENGHT
                             ? description.substring(
-                                  0,
-                                  MAX_DESCRIPTION_PREVIEW_LENGHT,
-                              ) + "..."
+                                0,
+                                MAX_DESCRIPTION_PREVIEW_LENGHT,
+                            ) + "..."
                             : description}
                     </p>
                 </div>

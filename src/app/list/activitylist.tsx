@@ -10,12 +10,11 @@ import {
 } from "react";
 import { GetActivities } from "./actions";
 
-export function ActivityList(props: { initialData: JSX.Element[] }) {
-    const { initialData } = props;
+export function ActivityList() {
     const searchParams = useSearchParams();
     const query = searchParams.get("q") || "";
 
-    const [activities, setActivities] = useState<ReactNode[]>(initialData);
+    const [activities, setActivities] = useState<ReactNode[]>([]);
     const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
@@ -26,11 +25,11 @@ export function ActivityList(props: { initialData: JSX.Element[] }) {
         });
     }, [query]);
     return (
-        <div className="flex flex-wrap content-start justify-center-safe gap-4">
+        <div className="flex gap-2 flex-wrap">
             {isPending && <p>Loading...</p>}
             {!isPending && activities}
             {!isPending && activities.length == 0 && query != "" && (
-                <p>No activity found for query '{query}'</p>
+                <p>Žiadna hra sa nenašla</p>
             )}
         </div>
     );
