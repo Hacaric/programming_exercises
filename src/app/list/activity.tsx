@@ -8,18 +8,14 @@ export async function getActivityTagsJSX(activity: Activity) {
     if (!tags) {
         return [];
     }
-    const tags_elemets = [];
-    tags_elemets.push(
-        tags.activityType.map((tag) => ActivityTag(tag.name, tag.tagColor)),
-    );
-    tags_elemets.push(
-        tags.ageGroups.map((tag) => ActivityTag(tag.name, tag.tagColor)),
-    );
-    tags_elemets.push(
-        tags.enviroments.map((tag) => ActivityTag(tag.name, tag.tagColor)),
-    );
-    tags_elemets.push(
-        tags.preparation.map((tag) => ActivityTag(tag.name, tag.tagColor)),
+    const all_tags = [
+        ...tags.activityType,
+        ...tags.preparation,
+        ...tags.enviroments,
+        ...tags.ageGroups,
+    ];
+    const tags_elemets = all_tags.map((tag) =>
+        ActivityTag(tag.name, tag.tagColor),
     );
     return tags_elemets;
 }
@@ -136,13 +132,14 @@ export async function ActivityElement(
     id: number,
     name: string,
     description: string,
-    tags: Array<ReactNode>,
+    durationMinutes?: number,
+    tags?: Array<ReactNode>,
 ) {
     const MAX_DESCRIPTION_PREVIEW_LENGHT = 170;
     return (
         <div
             key={id}
-            className="border-slsk-blue-dark h-60 min-w-80 flex-1 rounded-md border-2 overflow-hidden transition-all duration-150 hover:bg-gray-100 hover:shadow-lg"
+            className="border-slsk-blue-dark h-60 min-w-80 flex-1 overflow-hidden rounded-md border-2 transition-all duration-150 hover:bg-gray-100 hover:shadow-lg"
         >
             <a href={`/activity/${id}`} className="flex h-full flex-col p-2">
                 <div>
@@ -152,14 +149,26 @@ export async function ActivityElement(
                     <p className="text-md m-1">
                         {description.length > MAX_DESCRIPTION_PREVIEW_LENGHT
                             ? description.substring(
-                                0,
-                                MAX_DESCRIPTION_PREVIEW_LENGHT,
-                            ) + "..."
+                                  0,
+                                  MAX_DESCRIPTION_PREVIEW_LENGHT,
+                              ) + "..."
                             : description}
                     </p>
                 </div>
-                <div className="mt-auto flex flex-wrap gap-x-0.5 gap-y-1">
-                    {tags}
+                <div className="mt-auto flex items-center justify-between gap-1">
+                    <div className="flex flex-wrap gap-x-0.5 gap-y-1">
+                        {tags}
+                    </div>
+                    <div>
+                        {durationMinutes && (
+                            <span className="text-slsk-yellow flex items-center gap-0.5 text-center font-semibold">
+                                <span className="material-symbols-outlined">
+                                    schedule
+                                </span>
+                                {durationMinutes} min.
+                            </span>
+                        )}
+                    </div>
                 </div>
             </a>
         </div>

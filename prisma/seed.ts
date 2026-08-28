@@ -85,10 +85,10 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
-            tags: {
+            neededItems: "2 Lopty",
+            durationMinutes: 10,
+            activityTags: {
                 create: {
-                    minDuration: new Date("1970-01-01T00:15:00.000Z"), // 15 minutes
-                    maxDuration: new Date("1970-01-01T00:45:00.000Z"), // 45 minutes
                     ageGroups: {
                         connect: [{ name: "Skauti" }],
                     },
@@ -112,10 +112,10 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
-            tags: {
+            neededItems: "Hra Avalon",
+            durationMinutes: 45,
+            activityTags: {
                 create: {
-                    minDuration: new Date("1970-01-01T00:15:00.000Z"), // 15 minutes
-                    maxDuration: new Date("1970-01-01T00:45:00.000Z"), // 45 minutes
                     ageGroups: {
                         connect: [{ name: "Skauti" }, { name: "Rangeri" }],
                     },
@@ -139,10 +139,9 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
-            tags: {
+            durationMinutes: 10,
+            activityTags: {
                 create: {
-                    minDuration: new Date("1970-01-01T00:15:00.000Z"), // 15 minutes
-                    maxDuration: new Date("1970-01-01T00:45:00.000Z"), // 45 minutes
                     ageGroups: {
                         connect: [{ name: "Skauti" }, { name: "Rangeri" }],
                     },

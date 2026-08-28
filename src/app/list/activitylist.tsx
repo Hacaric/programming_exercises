@@ -25,7 +25,7 @@ export function ActivityList() {
         });
     }, [query]);
     return (
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-wrap gap-2">
             {isPending && <p>Loading...</p>}
             {!isPending && activities}
             {!isPending && activities.length == 0 && query != "" && (

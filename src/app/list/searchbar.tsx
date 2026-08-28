@@ -31,7 +31,7 @@ export function SearchBar() {
     return (
         <form
             onSubmit={handleSubmit}
-            className="border-slsk-blue-dark text-slsk-blue-dark flex h-10 items-center gap-2 rounded-2xl border-2 pl-2 overflow-hidden"
+            className="border-slsk-blue-dark text-slsk-blue-dark flex h-10 items-center gap-2 overflow-hidden rounded-2xl border-2 pl-2"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +70,7 @@ export function SearchBar() {
                     &#10006;
                 </button>
             )}
-            <button className="border-l-slsk-blue-dark h-full border-l-2 px-4 font-bold cursor-pointer hover:text-white hover:bg-slsk-blue-dark transition-all duration-150">
+            <button className="border-l-slsk-blue-dark hover:bg-slsk-blue-dark h-full cursor-pointer border-l-2 px-4 font-bold transition-all duration-150 hover:text-white">
                 Vyhľadať
             </button>
             {/* <div className="w-[1px] bg-black h-7 self-center mx-2"></div> */}
