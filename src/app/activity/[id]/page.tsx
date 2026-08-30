@@ -1,6 +1,7 @@
-import { getactivityProperitesJSX } from "~/app/list/activity";
-import { GetActivity } from "../../list/actions";
 // TODO: increase activity.views counter
+
+import { GetActivity, getActivityTagsJSX } from "~/utils/activity";
+
 
 export default async function ActivityDetail({
     params,
@@ -22,7 +23,7 @@ export default async function ActivityDetail({
         );
     }
 
-    const tags = getactivityProperitesJSX(activity);
+    const tags = await getActivityTagsJSX(activity);
     return (
         <div className="border-slsk-blue-dark flex flex-col gap-2 rounded-2xl border-2 p-5">
             <div className="text-align-center">

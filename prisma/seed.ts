@@ -137,12 +137,11 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
-            neededItems: "2 Lopty",
-            durationMinutes: 10,
             properties: {
                 create: {
-                    minDuration: new Date("1970-01-01T00:15:00.000Z"), // 15 minutes
-                    maxDuration: new Date("1970-01-01T00:45:00.000Z"), // 45 minutes
+                    minDurationMinutes: 15,
+                    maxDurationMinutes: 45,
+                    neededItems: "2 Lopty",
                     tags: {
                         connect: [
                             { name: "Skauti" },
@@ -162,12 +161,11 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
-            neededItems: "Hra Avalon",
-            durationMinutes: 45,
             properties: {
                 create: {
-                    minDuration: new Date("1970-01-01T00:15:00.000Z"), // 15 minutes
-                    maxDuration: new Date("1970-01-01T00:45:00.000Z"), // 45 minutes
+                    minDurationMinutes: 20,
+                    maxDurationMinutes: 120,
+                    neededItems: "Stolová hra 'Avalon: The resistance'",
                     tags: {
                         connect: [
                             { name: "Skauti" },
@@ -188,11 +186,10 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
-            durationMinutes: 10,
             properties: {
                 create: {
-                    minDuration: new Date("1970-01-01T00:15:00.000Z"), // 15 minutes
-                    maxDuration: new Date("1970-01-01T00:45:00.000Z"), // 45 minutes
+                    minDurationMinutes: 5,
+                    maxDurationMinutes: 15,
                     tags: {
                         connect: [
                             { name: "Skauti" },

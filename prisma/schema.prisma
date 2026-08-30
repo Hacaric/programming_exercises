@@ -71,8 +71,9 @@ model ActivityProperties {
   // preparation   ActivityPreparation[]
   // enviroments   ActivityEnviroment[]
 //  durationGruop ActivityDurationGruop[]
-  minDuration   DateTime
-  maxDuration   DateTime
+  minDurationMinutes Int
+  maxDurationMinutes Int
+  neededItems   String?
 }
 
 model Activity {

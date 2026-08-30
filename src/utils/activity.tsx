@@ -1,8 +1,8 @@
 "use server";
-import { GetActivityProperites } from "../app/search/actions";
 import type { ReactNode, MouseEvent as ReactMouseEvent } from "react";
-import type { Activity } from "generated/prisma";
+import type { Activity, ActivityProperties } from "generated/prisma";
 import { getTextColorBasedOnBacgroundColor } from "./colors";
+import { prisma } from "lib/prisma";
 
 export async function getActivityTagsJSX(activity: Activity) {
     const tags = await GetActivityProperites(activity.id);
@@ -83,4 +83,71 @@ export async function ActivityElement(
             </a>
         </div>
     );
+}
+
+export async function GetActivity(
+    id: number,
+): Promise<(Activity & { properties: ActivityProperties | null }) | null> {
+    const activity = await prisma.activity.findUnique({
+        where: { id: id },
+        include: { properties: true },
+    });
+    if (!activity) {
+        console.warn(`Warning: Activity not found (id: ${id})`);
+        return null;
+    }
+    if (!activity.properties) {
+        console.error(
+            `Error: Activity (id: ${id}) defiend incorrecty, cannot be used: Missing activityProperites.`,
+        );
+        return null;
+    }
+    return activity;
+}
+export interface ActivityTagDBType {
+    name: string;
+    tagColor: string;
+    belongsToActivityProperties: ActivityProperties[];
+}
+
+export async function getAllTagsData(): Promise<
+    Map<string, ActivityTagDBType>
+> {
+    let tags: ActivityTagDBType[] = await prisma.activityTag.findMany({
+        include: { belongsToActivityProperties: true },
+    });
+
+    // TODO: CLEANUP THIS FUCNTION
+
+    // const tag_elements = tags.map(
+    //     (tag) => <ActivityTagFilter key={tag.name} name={tag.name} color={tag.tagColor} tag={tag} /> //ActivityTagFilter(tag.name, tag.tagColor, tag)
+    // )
+    const tag_hashmap = new Map();
+    for (let i = 0; i < tags.length; i++) {
+        let curr_tag_data = tags[i];
+        if (!curr_tag_data) {
+            continue;
+        }
+        let key = curr_tag_data.name;
+        tag_hashmap.set(key, curr_tag_data);
+    }
+    return tag_hashmap;
+}
+
+
+export async function GetActivityProperites(id: number) {
+    const activity = await GetActivity(id);
+    if (!activity || !activity.properties || !activity.properties?.id) {
+        return null;
+    }
+    const activityProperites = await prisma.activityProperties.findUnique({
+        where: { id: activity.properties.id },
+        include: {
+            tags: true,
+        },
+    });
+    if (!activityProperites) {
+        return null;
+    }
+    return activityProperites;
 }
