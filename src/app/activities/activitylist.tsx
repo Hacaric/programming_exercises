@@ -27,7 +27,7 @@ export function ActivityList(props: { initialData: JSX.Element[] }) {
         });
     }, [query, tag_filters_raw]);
     return (
-        <div className="flex flex-wrap content-start justify-center-safe gap-4 p-10">
+        <div className="flex flex-wrap gap-2">
             {isPending && <p>Loading...</p>}
             {!isPending && activities}
             {!isPending && activities.length == 0 && <p>No activity found.</p>}

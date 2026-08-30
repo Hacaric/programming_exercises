@@ -10,17 +10,11 @@ export function Navbar() {
                     className="size-13 flex-none rounded-full bg-white p-1"
                 />
             </a>
-            <div className="flex items-center">
-                <div className="mx-5 h-[70%] w-px bg-black"></div>
-            </div>
             <div className="flex items-center gap-5">
                 <a href="/" className={linkStyle}>
                     Domov
                 </a>
-                <a href="/search" className={linkStyle}>
-                    Hľadať aktivity
-                </a>
-                <a href="/list" className={linkStyle}>
+                <a href="/activities" className={linkStyle}>
                     Všetky aktivity
                 </a>
                 <a

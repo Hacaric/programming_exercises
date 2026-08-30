@@ -1,4 +1,4 @@
-import { GetActivitiesFiltered, getActivitiesFromRawFilters } from "./actions";
+import { getActivitiesFromRawFilters } from "./actions";
 import { SearchBar } from "./searchbar";
 import { ActivityList } from "./activitylist";
 import { Filters } from "./filters_server";
@@ -33,12 +33,14 @@ export default async function ListActivities({ searchParams }: PageProps_) {
     }
 
     return (
-        <div className="grid grid-flow-col grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
-            <div className="row-span-2 m-2 h-300 w-60 rounded-xl border-2 p-2">
+        <div className="flex flex-col gap-2 md:flex-row">
+            <div className="h-min flex-1 rounded-xl border-2 p-2">
                 <Filters searchParams={searchParams} />
             </div>
-            <SearchBar />
-            <ActivityList initialData={activities} />
+            <div className="flex-5 flex flex-col gap-2">
+                <SearchBar />
+                <ActivityList initialData={activities} />
+            </div>
         </div>
     );
 }

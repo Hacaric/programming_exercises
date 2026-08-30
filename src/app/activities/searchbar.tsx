@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export function SearchBar() {
@@ -17,11 +17,10 @@ export function SearchBar() {
         const params = new URLSearchParams(searchParams.toString());
         if (query_) {
             params.set("q", query_);
-            params.set("q", query_);
         } else {
             params.delete("q");
         }
-        router.push(`/search?${params.toString()}`);
+        router.push(`?${params.toString()}`);
     }
 
     function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
@@ -36,7 +35,7 @@ export function SearchBar() {
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="mr-0 ml-0 size-7 h-6 w-6 cursor-pointer text-xl font-bold text-black"
+                className="size-7"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -74,7 +73,6 @@ export function SearchBar() {
             <button className="border-l-slsk-blue-dark hover:bg-slsk-blue-dark h-full cursor-pointer border-l-2 px-4 font-bold transition-all duration-150 hover:text-white">
                 Vyhľadať
             </button>
-            {/* <div className="w-[1px] bg-black h-7 self-center mx-2"></div> */}
         </form>
     );
 }
