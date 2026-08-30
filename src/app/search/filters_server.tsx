@@ -1,5 +1,5 @@
 "use server";
-import { getAllTagsData, type ActivityTagDBType } from "./actions";
+import { getAllTagsData, type ActivityTagDBType } from "~/utils/activity";
 import { FiltersClientSide } from "./filters_client";
 import type { PageProps_ } from "./page";
 import { parseTagFilters } from "./utils";

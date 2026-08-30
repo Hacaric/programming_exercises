@@ -36,7 +36,7 @@ export function SearchBar() {
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="size-7 mr-0 ml-0 h-6 w-6 cursor-pointer text-xl font-bold text-black"
+                className="mr-0 ml-0 size-7 h-6 w-6 cursor-pointer text-xl font-bold text-black"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

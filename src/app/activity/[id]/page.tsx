@@ -2,7 +2,6 @@
 
 import { GetActivity, getActivityTagsJSX } from "~/utils/activity";
 
-
 export default async function ActivityDetail({
     params,
 }: {

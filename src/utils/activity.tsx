@@ -134,7 +134,6 @@ export async function getAllTagsData(): Promise<
     return tag_hashmap;
 }
 
-
 export async function GetActivityProperites(id: number) {
     const activity = await GetActivity(id);
     if (!activity || !activity.properties || !activity.properties?.id) {

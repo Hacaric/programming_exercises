@@ -1,6 +1,6 @@
 "use client";
 import { getTextColorBasedOnBacgroundColor } from "~/utils/colors";
-import type { ActivityTagDBType } from "./actions";
+import type { ActivityTagDBType } from "~/utils/activity";
 import {
     ReadonlyURLSearchParams,
     useRouter,
@@ -87,24 +87,22 @@ function handleTagClick(
     const params = new URLSearchParams(searchParamsReadOnly.toString());
     const filters = params.get("tag_filters");
 
-    console.debug(`Hadling tag click: got filters(raw): ${filters}`);
+    // console.debug(`Hadling tag click: got filters(raw): ${filters}`);
     let filters_parsed: string[] = [];
     if (filters && filters != "") {
         filters_parsed = parseTagFilters(filters) ?? []; // parseTagFilters(filters)?.map((f)=>JSON.stringify(f)) ?? [];
     }
-    console.debug(`Parsed tag filters: ${JSON.stringify(filters_parsed)}`);
+    // console.debug(`Parsed tag filters: ${JSON.stringify(filters_parsed)}`);
     const current_tag_filter: string = tag.name;
 
     if (filters_parsed.includes(current_tag_filter)) {
-        console.debug(filters_parsed);
         filters_parsed.splice(filters_parsed.indexOf(current_tag_filter), 1);
-        console.debug(filters_parsed);
     } else {
         filters_parsed.push(current_tag_filter);
     }
-    console.debug(
-        `Done proper action with ${JSON.stringify(current_tag_filter)}: FILTERS = ${JSON.stringify(filters_parsed)}`,
-    );
+    // console.debug(
+    //     `Done proper action with ${JSON.stringify(current_tag_filter)}: FILTERS = ${JSON.stringify(filters_parsed)}`,
+    // );
 
     params.set("tag_filters", JSON.stringify(filters_parsed));
     router.push(`?${params.toString()}`);
@@ -156,10 +154,10 @@ export function FiltersClientSide(props: {
 }) {
     "use client";
     const { tagsData, chosenTagsHashset } = props;
-    console.debug(
-        `chosenTagsHashset: ${JSON.stringify(Array.from(chosenTagsHashset))}`,
-    );
-    console.debug(`tagsData: ${JSON.stringify(Array.from(tagsData))}`);
+    // console.debug(
+    //     `chosenTagsHashset: ${JSON.stringify(Array.from(chosenTagsHashset))}`,
+    // );
+    // console.debug(`tagsData: ${JSON.stringify(Array.from(tagsData))}`);
     let chosenTags: JSX.Element[] = [];
     let unchosenTags: JSX.Element[] = [];
 

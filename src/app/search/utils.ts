@@ -4,7 +4,7 @@ export function parseTagFilters(
     if (!tag_filters_raw) {
         return null;
     }
-    console.log(`Called parseTagFilters('${tag_filters_raw}')`);
+    // console.log(`Called parseTagFilters('${tag_filters_raw}')`);
     let tag_filters_parsed;
     try {
         tag_filters_parsed = JSON.parse(tag_filters_raw);
@@ -20,7 +20,9 @@ export function parseTagFilters(
     }
 
     let isValid = tag_filters_parsed.every((e) => typeof e == "string");
-    console.log(`Done parsing Tag Filters. Success? ${isValid}`);
+    console.log(
+        `Done parsing Tag Filters: ${isValid ? "Success" : "Failed (Invalid structure)"}`,
+    );
     if (!isValid) {
         return null;
     }
