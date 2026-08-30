@@ -1,7 +1,10 @@
-
-export function parseTagFilters(tag_filters_raw: string | null): string[] | null {
-    if (!tag_filters_raw) {return null;}
-    console.log(`Called parseTagFilters('${tag_filters_raw}')`)
+export function parseTagFilters(
+    tag_filters_raw: string | null,
+): string[] | null {
+    if (!tag_filters_raw) {
+        return null;
+    }
+    console.log(`Called parseTagFilters('${tag_filters_raw}')`);
     let tag_filters_parsed;
     try {
         tag_filters_parsed = JSON.parse(tag_filters_raw);
@@ -12,15 +15,14 @@ export function parseTagFilters(tag_filters_raw: string | null): string[] | null
     }
 
     if (!Array.isArray(tag_filters_parsed)) {
-        console.error(`Invalid search filter, ignoring: is not array`)
+        console.error(`Invalid search filter, ignoring: is not array`);
         return null;
     }
 
-    let isValid = tag_filters_parsed.every((e) => typeof e == 'string')
-    console.log(`Done parsing Tag Filters. Success? ${isValid}`)
+    let isValid = tag_filters_parsed.every((e) => typeof e == "string");
+    console.log(`Done parsing Tag Filters. Success? ${isValid}`);
     if (!isValid) {
         return null;
     }
     return tag_filters_parsed;
 }
-

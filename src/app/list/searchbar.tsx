@@ -17,6 +17,7 @@ export function SearchBar() {
         const params = new URLSearchParams(searchParams.toString());
         if (query_) {
             params.set("q", query_);
+            params.set("q", query_);
         } else {
             params.delete("q");
         }
@@ -31,11 +32,11 @@ export function SearchBar() {
     return (
         <form
             onSubmit={handleSubmit}
-            className="align-center mt-2 mr-12 ml-10 flex h-10 items-center rounded-3xl border-1 border-2 border-r-0 border-black py-0 pl-3"
+            className="border-slsk-blue-dark text-slsk-blue-dark flex h-10 items-center gap-2 overflow-hidden rounded-2xl border-2 pl-2"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="mr-0 ml-0 h-6 w-6 cursor-pointer text-xl font-bold text-black"
+                className="size-7 mr-0 ml-0 h-6 w-6 cursor-pointer text-xl font-bold text-black"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -54,7 +55,7 @@ export function SearchBar() {
                     setQuery(e.target.value);
                 }}
                 type="text"
-                className="stretch font-xl w-full pl-3 font-bold focus:outline-0"
+                className="font-2xl flex-1 font-semibold outline-none"
                 placeholder="Hľadať..."
             />
             {/* <button type="submit" className="justify-self-end pr-1 pl-2 font-bold">&#8629;</button> */}
@@ -65,13 +66,13 @@ export function SearchBar() {
                         setQuery("");
                         handleSearch("");
                     }}
-                    className="mx-2 cursor-pointer text-gray-500"
+                    className="mx-2 cursor-pointer"
                 >
                     &#10006;
                 </button>
             )}
-            <button className="h-10 w-20 flex-none cursor-pointer rounded-r-3xl border-2 bg-[#aaa] pr-2 pl-2">
-                Search
+            <button className="border-l-slsk-blue-dark hover:bg-slsk-blue-dark h-full cursor-pointer border-l-2 px-4 font-bold transition-all duration-150 hover:text-white">
+                Vyhľadať
             </button>
             {/* <div className="w-[1px] bg-black h-7 self-center mx-2"></div> */}
         </form>

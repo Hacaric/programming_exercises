@@ -2,8 +2,8 @@
 // learn more: https://better-auth.com/docs/concepts/database
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+    provider = "prisma-client-js"
+    output   = "../generated/prisma"
 }
 
 // NOTE: When using mysql or sqlserver, uncomment the //@db.Text annotations in model Account below
@@ -11,8 +11,8 @@ generator client {
 // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+    provider = "mysql"
+    url      = env("DATABASE_URL")
 }
 
 // model ActivityDurationGruop {
@@ -83,85 +83,83 @@ model Activity {
   
   views         Int      @default(0)
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  createdBy     User     @relation(fields: [createdById], references: [id])
-  createdById   String
+    createdBy   User   @relation(fields: [createdById], references: [id])
+    createdById String
 }
 
 model Post {
-  id        String   @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+    id        String   @id @default(cuid())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
-  createdBy   User   @relation(fields: [createdById], references: [id])
-  createdById String
+    createdBy   User   @relation(fields: [createdById], references: [id])
+    createdById String
 
-  @@index([name])
+    @@index([name])
 }
 
 model User {
-  id            String    @id
-  name          String //@db.Text
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String? //@db.Text
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
-  sessions      Session[]
-  accounts      Account[]
-  posts         Post[]
-  createdActivities Activity[]
+    id                String     @id
+    name              String //@db.Text
+    email             String
+    emailVerified     Boolean    @default(false)
+    image             String? //@db.Text
+    createdAt         DateTime   @default(now())
+    updatedAt         DateTime   @default(now()) @updatedAt
+    sessions          Session[]
+    accounts          Account[]
+    posts             Post[]
+    createdActivities Activity[]
 
-  @@unique([email])
-  @@map("user")
+    @@unique([email])
+    @@map("user")
 }
 
 model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String? //@db.Text
-  userAgent String? //@db.Text
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id        String   @id
+    expiresAt DateTime
+    token     String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    ipAddress String? //@db.Text
+    userAgent String? //@db.Text
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
-  @@map("session")
+    @@unique([token])
+    @@map("session")
 }
 
 model Account {
-  id                    String    @id
-  accountId             String //@db.Text
-  providerId            String //@db.Text
-  userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String? //@db.Text
-  refreshToken          String? //@db.Text
-  idToken               String? //@db.Text
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String? //@db.Text
-  password              String? //@db.Text
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+    id                    String    @id
+    accountId             String //@db.Text
+    providerId            String //@db.Text
+    userId                String
+    user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    accessToken           String? //@db.Text
+    refreshToken          String? //@db.Text
+    idToken               String? //@db.Text
+    accessTokenExpiresAt  DateTime?
+    refreshTokenExpiresAt DateTime?
+    scope                 String? //@db.Text
+    password              String? //@db.Text
+    createdAt             DateTime  @default(now())
+    updatedAt             DateTime  @updatedAt
 
-  @@map("account")
+    @@map("account")
 }
 
 model Verification {
-  id         String   @id
-  identifier String //@db.Text
-  value      String //@db.Text
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
+    id         String   @id
+    identifier String //@db.Text
+    value      String //@db.Text
+    expiresAt  DateTime
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @default(now()) @updatedAt
 
-  @@map("verification")
+    @@map("verification")
 }
-
-

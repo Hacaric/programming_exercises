@@ -1,9 +1,8 @@
-"use server"
+"use server";
 import { getAllTagsData, type ActivityTagDBType } from "./actions";
 import { FiltersClientSide } from "./filters_client";
 import type { PageProps_ } from "./page";
 import { parseTagFilters } from "./utils";
-
 
 export async function Filters(props: PageProps_) {
     // let rawTagFilter: string|undefined;
@@ -18,8 +17,7 @@ export async function Filters(props: PageProps_) {
         chosenTagsList = parseTagFilters(rawTagFilters) ?? [];
         chosenTagsHashset = new Set(chosenTagsList);
     }
-    const tagData: Map<string, ActivityTagDBType> =
-        await getAllTagsData();
+    const tagData: Map<string, ActivityTagDBType> = await getAllTagsData();
     // tagData.forEach((val, key)=>{console.debug(`${JSON.stringify(key)}=${JSON.stringify(val)}`)})
     return (
         <FiltersClientSide

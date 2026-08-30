@@ -1,7 +1,11 @@
 "use client";
 import { getTextColorBasedOnBacgroundColor } from "~/utils/colors";
 import type { ActivityTagDBType } from "./actions";
-import { ReadonlyURLSearchParams, useRouter, useSearchParams } from "next/navigation";
+import {
+    ReadonlyURLSearchParams,
+    useRouter,
+    useSearchParams,
+} from "next/navigation";
 import type { JSX } from "react";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { parseTagFilters } from "./utils";
@@ -75,17 +79,20 @@ import { parseTagFilters } from "./utils";
 //     return tag_filters_parsed;
 // }
 
-function handleTagClick(tag: ActivityTagDBType, searchParamsReadOnly: ReadonlyURLSearchParams, router: AppRouterInstance) {
-
+function handleTagClick(
+    tag: ActivityTagDBType,
+    searchParamsReadOnly: ReadonlyURLSearchParams,
+    router: AppRouterInstance,
+) {
     const params = new URLSearchParams(searchParamsReadOnly.toString());
     const filters = params.get("tag_filters");
 
-    console.debug(`Hadling tag click: got filters(raw): ${filters}`)
+    console.debug(`Hadling tag click: got filters(raw): ${filters}`);
     let filters_parsed: string[] = [];
     if (filters && filters != "") {
         filters_parsed = parseTagFilters(filters) ?? []; // parseTagFilters(filters)?.map((f)=>JSON.stringify(f)) ?? [];
     }
-    console.debug(`Parsed tag filters: ${JSON.stringify(filters_parsed)}`)
+    console.debug(`Parsed tag filters: ${JSON.stringify(filters_parsed)}`);
     const current_tag_filter: string = tag.name;
 
     if (filters_parsed.includes(current_tag_filter)) {
@@ -95,7 +102,9 @@ function handleTagClick(tag: ActivityTagDBType, searchParamsReadOnly: ReadonlyUR
     } else {
         filters_parsed.push(current_tag_filter);
     }
-    console.debug(`Done proper action with ${JSON.stringify(current_tag_filter)}: FILTERS = ${JSON.stringify(filters_parsed)}`)
+    console.debug(
+        `Done proper action with ${JSON.stringify(current_tag_filter)}: FILTERS = ${JSON.stringify(filters_parsed)}`,
+    );
 
     params.set("tag_filters", JSON.stringify(filters_parsed));
     router.push(`?${params.toString()}`);
@@ -124,7 +133,7 @@ function ActivityTag(props: { tagData: ActivityTagDBType }) {
             onClick={(event) => {
                 handleTagClick(tagData, searchParamsReadOnly, router);
             }}
-            className="my-0 max-h-6 rounded-xl border-2 px-1 text-[13px] cursor-pointer"
+            className="my-0 max-h-6 cursor-pointer rounded-xl border-2 px-1 text-[13px]"
             // Note: we need to use the style attribute, because tailwindcss has problems with dynamically generating colors
             // Unrelated note: We apply the color to border and make background the same color with smaller opacity
             style={{
@@ -146,9 +155,11 @@ export function FiltersClientSide(props: {
     chosenTagsHashset: Set<string>;
 }) {
     "use client";
-    const { tagsData , chosenTagsHashset } = props;
-    console.debug(`chosenTagsHashset: ${JSON.stringify(Array.from(chosenTagsHashset))}`)
-    console.debug(`tagsData: ${JSON.stringify(Array.from(tagsData))}`)
+    const { tagsData, chosenTagsHashset } = props;
+    console.debug(
+        `chosenTagsHashset: ${JSON.stringify(Array.from(chosenTagsHashset))}`,
+    );
+    console.debug(`tagsData: ${JSON.stringify(Array.from(tagsData))}`);
     let chosenTags: JSX.Element[] = [];
     let unchosenTags: JSX.Element[] = [];
 
@@ -157,13 +168,9 @@ export function FiltersClientSide(props: {
         // chosenTagsHashset.forEach((val)=>console.debug(val));
         // console.debug(`chosenTagsHashset.has(${JSON.stringify(key)})? ${chosenTagsHashset.has(JSON.stringify(key))}`)
         if (chosenTagsHashset.has(key)) {
-            chosenTags.push(
-                <ActivityTag tagData={value} key={value.name} />,
-            );
+            chosenTags.push(<ActivityTag tagData={value} key={value.name} />);
         } else {
-            unchosenTags.push(
-                <ActivityTag tagData={value} key={value.name} />,
-            );
+            unchosenTags.push(<ActivityTag tagData={value} key={value.name} />);
         }
     });
     return (

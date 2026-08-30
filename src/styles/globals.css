@@ -1,15 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Georama:wght@400;500;600;700;800&display=swap")
+layer(base);
 @import "tailwindcss";
 
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  
-    
-}
-.navbar_link {
-  font-weight: normal;
-  text-decoration: none;  
-}
-.navbar_link:hover {
-  cursor: pointer;
+    --default-font-family: "Georama";
+    --default-mono-font-family: "Georama";
+
+    --color-slsk-purple-dark: rgb(112, 47, 138);
+    --color-slsk-purple-light: rgb(181, 128, 209);
+    --color-slsk-blue-dark: rgb(0, 40, 85);
+    --color-slsk-blue-mid: rgb(0, 75, 135);
+    --color-slsk-blue-light: rgb(0, 181, 226);
+    --color-slsk-yellow: rgb(242, 169, 0);
+    --color-slsk-orange: rgb(237, 139, 0);
+    --color-slsk-red: rgb(224, 60, 49);
+    --color-slsk-green-light: rgb(114, 191, 68);
+    --color-slsk-green-dark: rgb(0, 150, 94);
+    --color-slsk-brown: rgb(139, 91, 41);
+    --color-slsk-sand: rgb(252, 233, 191);
 }

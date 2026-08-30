@@ -9,7 +9,7 @@ export interface PageProps_ {
 }
 
 export default async function ListActivities({ searchParams }: PageProps_) {
-    console.log(`SEARCH PARAMS: ${JSON.stringify(searchParams)}`)
+    console.log(`SEARCH PARAMS: ${JSON.stringify(searchParams)}`);
     const searchParamsAwaited = await searchParams;
     let activities: JSX.Element[] = [];
     if (searchParamsAwaited) {
@@ -17,12 +17,16 @@ export default async function ListActivities({ searchParams }: PageProps_) {
         if (Array.isArray(query)) {
             query = query[0] ?? null;
         }
-        let filters: string[] | string | null = searchParamsAwaited["tag_filters"] ?? null;
+        let filters: string[] | string | null =
+            searchParamsAwaited["tag_filters"] ?? null;
         if (Array.isArray(filters)) {
             filters = filters[0] ?? null;
         }
-        console.debug(`FILTERS: ${filters}`)
-        activities = await getActivitiesFromRawFilters(query ?? null, filters) ?? <></>;
+        console.debug(`FILTERS: ${filters}`);
+        activities = (await getActivitiesFromRawFilters(
+            query ?? null,
+            filters,
+        )) ?? <></>;
     }
 
     return (

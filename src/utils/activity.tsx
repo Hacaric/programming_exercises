@@ -10,12 +10,12 @@ export async function getActivityTagsJSX(activity: Activity) {
         return [];
     }
     const tags_elemets = tags.tags.map((tag) => (
-            <ActivityTag
-                name={tag.name}
-                color={tag.tagColor}
-                key={`type-${tag.name}`}
-            />
-        ))
+        <ActivityTag
+            name={tag.name}
+            color={tag.tagColor}
+            key={`type-${tag.name}`}
+        />
+    ));
 
     return tags_elemets;
 }

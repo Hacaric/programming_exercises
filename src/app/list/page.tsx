@@ -6,9 +6,11 @@ export default async function ListActivities() {
     const activities = await GetAllActivities();
 
     return (
-        <div className="grid w-full grid-flow-col grid-cols-1 grid-rows-[auto_1fr]">
-            <SearchBar />
-            <ActivityList activities={activities} />
+        <div className="flex flex-col gap-2 md:flex-row">
+            <div className="flex flex-5 flex-col gap-2">
+                <SearchBar />
+                <ActivityList activities={activities} />
+            </div>
         </div>
     );
 }

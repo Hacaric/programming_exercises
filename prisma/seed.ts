@@ -24,31 +24,83 @@ async function main() {
 
     await prisma.activityTag.createMany({
         data: [
-            { name: "Vĺčatá a včielky", tagColor: "#ffff00", type: ActivityTagType.AGE_GROUP },
-            { name: "Skauti", tagColor: "#00bb00", type: ActivityTagType.AGE_GROUP },
-            { name: "Rangeri", tagColor: "#40008f", type: ActivityTagType.AGE_GROUP },
-            { name: "Roveri", tagColor: "#ff0909", type: ActivityTagType.AGE_GROUP },
-            { name: "Old skauti", tagColor: "#0963ff", type: ActivityTagType.AGE_GROUP },
+            {
+                name: "Vĺčatá a včielky",
+                tagColor: "#ffff00",
+                type: ActivityTagType.AGE_GROUP,
+            },
+            {
+                name: "Skauti",
+                tagColor: "#00bb00",
+                type: ActivityTagType.AGE_GROUP,
+            },
+            {
+                name: "Rangeri",
+                tagColor: "#40008f",
+                type: ActivityTagType.AGE_GROUP,
+            },
+            {
+                name: "Roveri",
+                tagColor: "#ff0909",
+                type: ActivityTagType.AGE_GROUP,
+            },
+            {
+                name: "Old skauti",
+                tagColor: "#0963ff",
+                type: ActivityTagType.AGE_GROUP,
+            },
         ],
     });
     await prisma.activityTag.createMany({
         data: [
-            { name: "Na von", tagColor: "#009300", type: ActivityTagType.ENVIROMENT },
-            { name: "Na vnútro", tagColor: "#474747", type: ActivityTagType.ENVIROMENT },
+            {
+                name: "Na von",
+                tagColor: "#009300",
+                type: ActivityTagType.ENVIROMENT,
+            },
+            {
+                name: "Na vnútro",
+                tagColor: "#474747",
+                type: ActivityTagType.ENVIROMENT,
+            },
         ],
     });
     await prisma.activityTag.createMany({
         data: [
-            { name: "Žiadna príprava", tagColor: "#004500", type: ActivityTagType.PREPARATION },
-            { name: "Jednoduchá príprava", tagColor: "#0ea3ff", type: ActivityTagType.PREPARATION },
-            { name: "Zložitá príprava", tagColor: "#800000", type: ActivityTagType.PREPARATION },
+            {
+                name: "Žiadna príprava",
+                tagColor: "#004500",
+                type: ActivityTagType.PREPARATION,
+            },
+            {
+                name: "Jednoduchá príprava",
+                tagColor: "#0ea3ff",
+                type: ActivityTagType.PREPARATION,
+            },
+            {
+                name: "Zložitá príprava",
+                tagColor: "#800000",
+                type: ActivityTagType.PREPARATION,
+            },
         ],
     });
     await prisma.activityTag.createMany({
         data: [
-            { name: "Hra", tagColor: "#9f00a7", type: ActivityTagType.ACITIVITY_TYPE },
-            { name: "Duchovno", tagColor: "#7777b0", type: ActivityTagType.ACITIVITY_TYPE },
-            { name: "Zručnosti", tagColor: "#1b6c00", type: ActivityTagType.ACITIVITY_TYPE },
+            {
+                name: "Hra",
+                tagColor: "#9f00a7",
+                type: ActivityTagType.ACITIVITY_TYPE,
+            },
+            {
+                name: "Duchovno",
+                tagColor: "#7777b0",
+                type: ActivityTagType.ACITIVITY_TYPE,
+            },
+            {
+                name: "Zručnosti",
+                tagColor: "#1b6c00",
+                type: ActivityTagType.ACITIVITY_TYPE,
+            },
         ],
     });
 
@@ -85,6 +137,8 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
+            neededItems: "2 Lopty",
+            durationMinutes: 10,
             properties: {
                 create: {
                     minDuration: new Date("1970-01-01T00:15:00.000Z"), // 15 minutes
@@ -93,10 +147,10 @@ async function main() {
                         connect: [
                             { name: "Skauti" },
                             { name: "Na von" },
-                            { name: "Jednoduchá príprava"},
+                            { name: "Jednoduchá príprava" },
                             { name: "Hra" },
-                        ]
-                    }
+                        ],
+                    },
                 },
             },
         },
@@ -108,6 +162,8 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
+            neededItems: "Hra Avalon",
+            durationMinutes: 45,
             properties: {
                 create: {
                     minDuration: new Date("1970-01-01T00:15:00.000Z"), // 15 minutes
@@ -117,10 +173,10 @@ async function main() {
                             { name: "Skauti" },
                             { name: "Rangeri" },
                             { name: "Na vnútro" },
-                            { name: "Jednoduchá príprava"},
+                            { name: "Jednoduchá príprava" },
                             { name: "Hra" },
-                        ]
-                    }
+                        ],
+                    },
                 },
             },
         },
@@ -132,6 +188,7 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
+            durationMinutes: 10,
             properties: {
                 create: {
                     minDuration: new Date("1970-01-01T00:15:00.000Z"), // 15 minutes
@@ -141,10 +198,10 @@ async function main() {
                             { name: "Skauti" },
                             { name: "Rangeri" },
                             { name: "Na vnútro" },
-                            { name: "Jednoduchá príprava"},
+                            { name: "Jednoduchá príprava" },
                             { name: "Hra" },
-                        ]
-                    }
+                        ],
+                    },
                 },
             },
         },

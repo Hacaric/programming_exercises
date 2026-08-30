@@ -20,9 +20,9 @@ export async function getAllTagsData(): Promise<
     Map<string, ActivityTagDBType>
 > {
     let tags: ActivityTagDBType[] = await prisma.activityTag.findMany({
-            include: { belongsToActivityProperties: true },
-        })
-    
+        include: { belongsToActivityProperties: true },
+    });
+
     // TODO: CLEANUP THIS FUCNTION
 
     // const tag_elements = tags.map(
@@ -68,7 +68,7 @@ export async function GetActivityProperites(id: number) {
     const activityProperites = await prisma.activityProperties.findUnique({
         where: { id: activity.properties.id },
         include: {
-            tags: true
+            tags: true,
         },
     });
     if (!activityProperites) {
@@ -161,11 +161,13 @@ export async function GetActivitiesFiltered(
     //
     //   !!! WATCH OUT !!! BAD CODE AHEAD, pls rewrite
     //
-    console.debug(`Getting activities...`)
+    console.debug(`Getting activities...`);
     let all_activities;
     if (accepted_activity_ids_set) {
         const accepted_activity_ids = Array.from(accepted_activity_ids_set);
-        console.debug(`Found filters: ${JSON.stringify(accepted_activity_ids)}`)
+        console.debug(
+            `Found filters: ${JSON.stringify(accepted_activity_ids)}`,
+        );
         all_activities = await prisma.activity.findMany({
             where: {
                 id: {
@@ -174,7 +176,7 @@ export async function GetActivitiesFiltered(
             },
         });
     } else {
-        console.debug(`No filters found, returning all activities.`)
+        console.debug(`No filters found, returning all activities.`);
         all_activities = await prisma.activity.findMany();
     }
 
@@ -205,27 +207,41 @@ export async function GetActivitiesFiltered(
     return activities;
 }
 
-export async function GetAllActivities() {return await GetActivitiesFiltered(null);}
-
-function findElementsContainedInEveryArray<T>(...arrays: T[][]): T[]{
-    if (arrays.length == 0) {return []}
-    if (arrays.length == 1) {return arrays[0] ?? []}
-    const arraysSorted: T[][] = arrays.sort((a, b) => a.length-b.length);
-    const controlArray = arraysSorted[0];
-    console.log(`The shortest array is long ${controlArray?.length}`)
-    const sets = arraysSorted.splice(1, arraysSorted.length-1).map(
-        (arr) => new Set(arr)
-    );
-    console.log(`Sets: ${JSON.stringify(sets.map((s)=>Array.from(s)))}`)
-    return controlArray?.filter(
-        (item) => sets.every(
-            (set_) => {console.log(`${set_} has ${item}? ${set_.has(item)}`); return set_.has(item)}
-        )
-    ) ?? []
+export async function GetAllActivities() {
+    return await GetActivitiesFiltered(null);
 }
 
-export async function getActivitiesFromRawFilters(query: string|null, tag_filters_raw: string|null): Promise<JSX.Element[]> {
-    console.log(`Calling getAccepted_ActivityProperty_ids('${tag_filters_raw})`)
+function findElementsContainedInEveryArray<T>(...arrays: T[][]): T[] {
+    if (arrays.length == 0) {
+        return [];
+    }
+    if (arrays.length == 1) {
+        return arrays[0] ?? [];
+    }
+    const arraysSorted: T[][] = arrays.sort((a, b) => a.length - b.length);
+    const controlArray = arraysSorted[0];
+    console.log(`The shortest array is long ${controlArray?.length}`);
+    const sets = arraysSorted
+        .splice(1, arraysSorted.length - 1)
+        .map((arr) => new Set(arr));
+    console.log(`Sets: ${JSON.stringify(sets.map((s) => Array.from(s)))}`);
+    return (
+        controlArray?.filter((item) =>
+            sets.every((set_) => {
+                console.log(`${set_} has ${item}? ${set_.has(item)}`);
+                return set_.has(item);
+            }),
+        ) ?? []
+    );
+}
+
+export async function getActivitiesFromRawFilters(
+    query: string | null,
+    tag_filters_raw: string | null,
+): Promise<JSX.Element[]> {
+    console.log(
+        `Calling getAccepted_ActivityProperty_ids('${tag_filters_raw})`,
+    );
     let tag_filters_parsed = parseTagFilters(tag_filters_raw);
     if (!tag_filters_parsed || tag_filters_parsed.length == 0) {
         return await GetActivitiesFiltered(query);
@@ -233,21 +249,26 @@ export async function getActivitiesFromRawFilters(query: string|null, tag_filter
     let tagActivityIDs: number[][] = [];
     const tags = await prisma.activityTag.findMany({
         where: {
-            name: {in: tag_filters_parsed}
+            name: { in: tag_filters_parsed },
         },
         include: {
-            belongsToActivityProperties: true
-        }
-    })
-    console.debug(`[DEBUG] getActivitiesFromRawFilters: tags: ${JSON.stringify(tags)}`)
+            belongsToActivityProperties: true,
+        },
+    });
+    console.debug(
+        `[DEBUG] getActivitiesFromRawFilters: tags: ${JSON.stringify(tags)}`,
+    );
     tags.forEach((tag) => {
-        tagActivityIDs.push(tag.belongsToActivityProperties.map(
-            (activityProperties) => activityProperties.activityID
-        ))
-    })
+        tagActivityIDs.push(
+            tag.belongsToActivityProperties.map(
+                (activityProperties) => activityProperties.activityID,
+            ),
+        );
+    });
 
-    const acceptedActivities = new Set(findElementsContainedInEveryArray(...tagActivityIDs));
-    
+    const acceptedActivities = new Set(
+        findElementsContainedInEveryArray(...tagActivityIDs),
+    );
+
     return await GetActivitiesFiltered(query, acceptedActivities);
 }
-
