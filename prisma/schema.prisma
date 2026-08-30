@@ -17,44 +17,59 @@ datasource db {
 
 // model ActivityDurationGruop {
 //  name             String  @id
-//  acitvityTags     ActivityTags[]
+//  acitvityTags     activityProperites[]
 //  minDuration      DateTime
 //  maxDuration      DateTime
 //  tagColor         String
 // }
 
-model ActivityAgeGroup {
-  name             String       @id
-  tagColor         String
-  activityTags     ActivityTags[]
+// model ActivityAgeGroup {
+//   name             String       @id
+//   tagColor         String
+//   activityProperites     ActivityProperties[]
+// }
+
+// model ActivityType {
+//   activityProperites     ActivityProperties[]
+//   name             String   @id
+//   tagColor         String
+// }
+
+// model ActivityPreparation {
+//   activityProperites     ActivityProperties[]
+//   name             String   @id
+//   tagColor         String
+// }
+
+// model ActivityEnviroment {
+//   activityProperites     ActivityProperties[]
+//   name             String   @id
+//   tagColor         String
+// }
+
+enum ActivityTagType {
+  AGE_GROUP
+  ACITIVITY_TYPE
+  PREPARATION
+  ENVIROMENT
 }
 
-model ActivityType {
-  activityTags     ActivityTags[]
-  name             String   @id
-  tagColor         String
+model ActivityTag {
+  belongsToActivityProperties ActivityProperties[]
+  name          String   @id
+  tagColor      String
+  type          ActivityTagType
 }
 
-model ActivityPreparation {
-  activityTags     ActivityTags[]
-  name             String   @id
-  tagColor         String
-}
-
-model ActivityEnviroment {
-  activityTags     ActivityTags[]
-  name             String   @id
-  tagColor         String
-}
-
-model ActivityTags {
+model ActivityProperties {
   id            Int      @id @default(autoincrement())
   activity      Activity @relation(fields: [activityID], references: [id])
   activityID    Int      @unique
-  ageGroups     ActivityAgeGroup[]
-  activityType  ActivityType[]
-  preparation   ActivityPreparation[]
-  enviroments   ActivityEnviroment[]
+  tags          ActivityTag[]
+  // ageGroups     ActivityAgeGroup[]
+  // activityType  ActivityType[]
+  // preparation   ActivityPreparation[]
+  // enviroments   ActivityEnviroment[]
 //  durationGruop ActivityDurationGruop[]
   minDuration   DateTime
   maxDuration   DateTime
@@ -64,7 +79,7 @@ model Activity {
   id            Int      @id @default(autoincrement())
   name          String
   description   String   @db.Text // @db.Text to allow long strings
-  tags          ActivityTags? 
+  properties    ActivityProperties? 
   
   views         Int      @default(0)
 

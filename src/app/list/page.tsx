@@ -1,17 +1,14 @@
-import { GetActivities } from "./actions";
-import { SearchBar } from "./searchbar";
+import { GetAllActivities } from "../search/actions";
 import { ActivityList } from "./activitylist";
+import { SearchBar } from "./searchbar";
 
 export default async function ListActivities() {
-    const activities = await GetActivities();
+    const activities = await GetAllActivities();
 
     return (
-        <div className="grid grid-flow-col grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
-            <div className="row-span-2 m-2 h-300 w-60 rounded-xl border-2 p-2">
-                FILTERS
-            </div>
+        <div className="grid w-full grid-flow-col grid-cols-1 grid-rows-[auto_1fr]">
             <SearchBar />
-            <ActivityList initialData={activities} />
+            <ActivityList activities={activities} />
         </div>
     );
 }

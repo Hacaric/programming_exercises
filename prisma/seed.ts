@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 config();
 
-import { PrismaClient } from "../generated/prisma/client";
+import { ActivityTagType, PrismaClient } from "../generated/prisma/client";
 import { error } from "console";
 import { LOREM_IPSUM } from "~/app/utils";
 
@@ -22,33 +22,33 @@ async function main() {
         );
     }
 
-    await prisma.activityAgeGroup.createMany({
+    await prisma.activityTag.createMany({
         data: [
-            { name: "Vĺčatá a včielky", tagColor: "#ffff00" },
-            { name: "Skauti", tagColor: "#00bb00" },
-            { name: "Rangeri", tagColor: "#40008f" },
-            { name: "Roveri", tagColor: "#ff0909" },
-            { name: "Old skauti", tagColor: "#0963ff" },
+            { name: "Vĺčatá a včielky", tagColor: "#ffff00", type: ActivityTagType.AGE_GROUP },
+            { name: "Skauti", tagColor: "#00bb00", type: ActivityTagType.AGE_GROUP },
+            { name: "Rangeri", tagColor: "#40008f", type: ActivityTagType.AGE_GROUP },
+            { name: "Roveri", tagColor: "#ff0909", type: ActivityTagType.AGE_GROUP },
+            { name: "Old skauti", tagColor: "#0963ff", type: ActivityTagType.AGE_GROUP },
         ],
     });
-    await prisma.activityEnviroment.createMany({
+    await prisma.activityTag.createMany({
         data: [
-            { name: "Na von", tagColor: "#009300" },
-            { name: "Na vnútro", tagColor: "#474747" },
+            { name: "Na von", tagColor: "#009300", type: ActivityTagType.ENVIROMENT },
+            { name: "Na vnútro", tagColor: "#474747", type: ActivityTagType.ENVIROMENT },
         ],
     });
-    await prisma.activityPreparation.createMany({
+    await prisma.activityTag.createMany({
         data: [
-            { name: "Žiadna príprava", tagColor: "#004500" },
-            { name: "Jednoduchá príprava", tagColor: "#0ea3ff" },
-            { name: "Zložitá príprava", tagColor: "#800000" },
+            { name: "Žiadna príprava", tagColor: "#004500", type: ActivityTagType.PREPARATION },
+            { name: "Jednoduchá príprava", tagColor: "#0ea3ff", type: ActivityTagType.PREPARATION },
+            { name: "Zložitá príprava", tagColor: "#800000", type: ActivityTagType.PREPARATION },
         ],
     });
-    await prisma.activityType.createMany({
+    await prisma.activityTag.createMany({
         data: [
-            { name: "Hra", tagColor: "#9f00a7" },
-            { name: "Duchovno", tagColor: "#7777b0" },
-            { name: "Zručnosti", tagColor: "#1b6c00" },
+            { name: "Hra", tagColor: "#9f00a7", type: ActivityTagType.ACITIVITY_TYPE },
+            { name: "Duchovno", tagColor: "#7777b0", type: ActivityTagType.ACITIVITY_TYPE },
+            { name: "Zručnosti", tagColor: "#1b6c00", type: ActivityTagType.ACITIVITY_TYPE },
         ],
     });
 
@@ -77,7 +77,7 @@ async function main() {
         },
     });
 
-    // Create Activity with related ActivityTags
+    // Create Activity with related activityProperites
     await prisma.activity.create({
         data: {
             name: "Sever proti juhu",
@@ -85,22 +85,18 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
-            tags: {
+            properties: {
                 create: {
                     minDuration: new Date("1970-01-01T00:15:00.000Z"), // 15 minutes
                     maxDuration: new Date("1970-01-01T00:45:00.000Z"), // 45 minutes
-                    ageGroups: {
-                        connect: [{ name: "Skauti" }],
-                    },
-                    enviroments: {
-                        connect: [{ name: "Na von" }],
-                    },
-                    preparation: {
-                        connect: [{ name: "Jednoduchá príprava" }],
-                    },
-                    activityType: {
-                        connect: [{ name: "Hra" }],
-                    },
+                    tags: {
+                        connect: [
+                            { name: "Skauti" },
+                            { name: "Na von" },
+                            { name: "Jednoduchá príprava"},
+                            { name: "Hra" },
+                        ]
+                    }
                 },
             },
         },
@@ -112,22 +108,19 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
-            tags: {
+            properties: {
                 create: {
                     minDuration: new Date("1970-01-01T00:15:00.000Z"), // 15 minutes
                     maxDuration: new Date("1970-01-01T00:45:00.000Z"), // 45 minutes
-                    ageGroups: {
-                        connect: [{ name: "Skauti" }, { name: "Rangeri" }],
-                    },
-                    enviroments: {
-                        connect: [{ name: "Na vnútro" }],
-                    },
-                    preparation: {
-                        connect: [{ name: "Jednoduchá príprava" }],
-                    },
-                    activityType: {
-                        connect: [{ name: "Hra" }],
-                    },
+                    tags: {
+                        connect: [
+                            { name: "Skauti" },
+                            { name: "Rangeri" },
+                            { name: "Na vnútro" },
+                            { name: "Jednoduchá príprava"},
+                            { name: "Hra" },
+                        ]
+                    }
                 },
             },
         },
@@ -139,22 +132,19 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
-            tags: {
+            properties: {
                 create: {
                     minDuration: new Date("1970-01-01T00:15:00.000Z"), // 15 minutes
                     maxDuration: new Date("1970-01-01T00:45:00.000Z"), // 45 minutes
-                    ageGroups: {
-                        connect: [{ name: "Skauti" }, { name: "Rangeri" }],
-                    },
-                    enviroments: {
-                        connect: [{ name: "Na vnútro" }],
-                    },
-                    preparation: {
-                        connect: [{ name: "Jednoduchá príprava" }],
-                    },
-                    activityType: {
-                        connect: [{ name: "Hra" }],
-                    },
+                    tags: {
+                        connect: [
+                            { name: "Skauti" },
+                            { name: "Rangeri" },
+                            { name: "Na vnútro" },
+                            { name: "Jednoduchá príprava"},
+                            { name: "Hra" },
+                        ]
+                    }
                 },
             },
         },

@@ -16,14 +16,17 @@ export function Navbar() {
                 />
             </a>
             <div className="flex items-center">
-                <div className="mx-5 h-[70%] w-[1px] bg-black"></div>
+                <div className="mx-5 h-[70%] w-px bg-black"></div>
             </div>
             <div className="flex items-center gap-5">
                 <a href="/" className="navbar_link">
                     Domov
                 </a>
+                <a href="/search" className="navbar_link">
+                    Hľadať aktivitu
+                </a>
                 <a href="/list" className="navbar_link">
-                    Aktivity
+                    Všetky aktivity
                 </a>
                 <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
                     REZNE ZDARMA
