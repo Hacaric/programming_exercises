@@ -37,7 +37,7 @@ export default async function ListActivities({ searchParams }: PageProps_) {
             <div className="h-min flex-1 rounded-xl border-2 p-2">
                 <Filters searchParams={searchParams} />
             </div>
-            <div className="flex-5 flex flex-col gap-2">
+            <div className="flex flex-5 flex-col gap-2">
                 <SearchBar />
                 <ActivityList initialData={activities} />
             </div>

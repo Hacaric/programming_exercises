@@ -173,9 +173,13 @@ export function FiltersClientSide(props: {
     });
     return (
         <div>
-            <p>Chosen tags:</p>
-            <div className="flex flex-wrap gap-px">{chosenTags}</div>
-            <p>Unchosen tags:</p>
+            <h4 className="text-xl font-semibold">Vybrané parametre:</h4>
+            {chosenTags.length > 0 ? (
+                <div className="flex flex-wrap gap-px">{chosenTags}</div>
+            ) : (
+                <span className="ml-1 italic">Žiadne</span>
+            )}
+            <h4 className="text-xl font-semibold">Ostatné parametre:</h4>
             <div className="flex flex-wrap gap-px">{unchosenTags}</div>
         </div>
     );

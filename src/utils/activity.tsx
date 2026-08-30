@@ -71,9 +71,9 @@ export async function ActivityElement(
                     <p className="text-md m-1">
                         {description.length > MAX_DESCRIPTION_PREVIEW_LENGHT
                             ? description.substring(
-                                0,
-                                MAX_DESCRIPTION_PREVIEW_LENGHT,
-                            ) + "..."
+                                  0,
+                                  MAX_DESCRIPTION_PREVIEW_LENGHT,
+                              ) + "..."
                             : description}
                     </p>
                 </div>
