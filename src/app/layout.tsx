@@ -35,9 +35,11 @@ export default function RootLayout({
                 />
             </head>
             <body>
-                <div className="flex flex-col gap-2 p-2">
+                <div className="flex flex-col gap-2">
                     <Navbar />
-                    <div id="content">{children}</div>
+                    <div id="content" className="p-2">
+                        {children}
+                    </div>
                 </div>
             </body>
         </html>

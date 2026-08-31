@@ -2,7 +2,7 @@ export function Navbar() {
     const linkStyle =
         "cursor-pointer hover:text-slsk-yellow transition-colors duration-100";
     return (
-        <div className="bg-slsk-blue-dark flex h-16 items-center gap-5 rounded-2xl p-2 px-4 font-bold text-white">
+        <div className="bg-slsk-blue-dark sticky top-0 flex h-16 items-center gap-5 p-2 px-4 font-bold text-white">
             <a href="/" className="content-center">
                 <img
                     src="/logo.png"

@@ -8,7 +8,7 @@ import {
     type JSX,
     type ReactNode,
 } from "react";
-import { getActivitiesFromRawFilters, GetActivitiesFiltered } from "./actions";
+import { getActivitiesFromRawFilters } from "./actions";
 
 export function ActivityList(props: { initialData: JSX.Element[] }) {
     const { initialData } = props;
