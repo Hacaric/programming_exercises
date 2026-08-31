@@ -1,5 +1,4 @@
 "use client";
-import { getTextColorBasedOnBacgroundColor } from "~/utils/colors";
 import type { ActivityTagDBType } from "~/utils/activity";
 import {
     ReadonlyURLSearchParams,
@@ -9,6 +8,8 @@ import {
 import type { JSX } from "react";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { parseTagFilters } from "./utils";
+import { Tag } from "~/components/tag";
+import type { Activity, ActivityTag } from "generated/prisma";
 
 // export function ActivityTagFilter(props: {name: string, color: string, tag: ActivityTagDBType}) {
 //     const {name, color, tag} = props;
@@ -80,7 +81,7 @@ import { parseTagFilters } from "./utils";
 // }
 
 function handleTagClick(
-    tag: ActivityTagDBType,
+    tag: ActivityTag,
     searchParamsReadOnly: ReadonlyURLSearchParams,
     router: AppRouterInstance,
 ) {
@@ -131,7 +132,7 @@ function ActivityTag(props: { tagData: ActivityTagDBType }) {
             onClick={(event) => {
                 handleTagClick(tagData, searchParamsReadOnly, router);
             }}
-            className="my-0 max-h-6 cursor-pointer rounded-xl border-2 px-1 text-[13px]"
+            className="rounded-md border-2 px-1"
             // Note: we need to use the style attribute, because tailwindcss has problems with dynamically generating colors
             // Unrelated note: We apply the color to border and make background the same color with smaller opacity
             style={{
@@ -148,39 +149,47 @@ function ActivityTag(props: { tagData: ActivityTagDBType }) {
     );
 }
 
+export function SelectTags(props: { tags: ActivityTag[] }) {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    return props.tags.map((tag) => (
+        <button
+            onClick={() => handleTagClick(tag, searchParams, router)}
+            className="cursor-pointer"
+            key={tag.name}
+        >
+            <Tag tag={tag} />
+        </button>
+    ));
+}
+
 export function FiltersClientSide(props: {
-    tagsData: Map<string, ActivityTagDBType>;
-    chosenTagsHashset: Set<string>;
+    tags: ActivityTag[];
+    chosenTags: string[];
 }) {
     "use client";
-    const { tagsData, chosenTagsHashset } = props;
-    // console.debug(
-    //     `chosenTagsHashset: ${JSON.stringify(Array.from(chosenTagsHashset))}`,
-    // );
-    // console.debug(`tagsData: ${JSON.stringify(Array.from(tagsData))}`);
-    let chosenTags: JSX.Element[] = [];
-    let unchosenTags: JSX.Element[] = [];
+    let { tags, chosenTags: rawChosenTags } = props;
 
-    tagsData.forEach((value, key) => {
-        // TODO: key attribut should be unique, here it might not be if we have two tags from different categories with the same name
-        // chosenTagsHashset.forEach((val)=>console.debug(val));
-        // console.debug(`chosenTagsHashset.has(${JSON.stringify(key)})? ${chosenTagsHashset.has(JSON.stringify(key))}`)
-        if (chosenTagsHashset.has(key)) {
-            chosenTags.push(<ActivityTag tagData={value} key={value.name} />);
-        } else {
-            unchosenTags.push(<ActivityTag tagData={value} key={value.name} />);
-        }
-    });
+    const chosenTags = tags.filter((tag) => rawChosenTags.includes(tag.name));
+    const unchosenTags = tags.filter(
+        (tag) => !rawChosenTags.includes(tag.name),
+    );
+
     return (
         <div>
             <h4 className="text-xl font-semibold">Vybrané parametre:</h4>
             {chosenTags.length > 0 ? (
-                <div className="flex flex-wrap gap-px">{chosenTags}</div>
+                <div className="flex flex-wrap gap-px">
+                    <SelectTags tags={chosenTags} />
+                </div>
             ) : (
                 <span className="ml-1 italic">Žiadne</span>
             )}
             <h4 className="text-xl font-semibold">Ostatné parametre:</h4>
-            <div className="flex flex-wrap gap-px">{unchosenTags}</div>
+            <div className="flex flex-wrap gap-px">
+                <SelectTags tags={unchosenTags} />
+            </div>
         </div>
     );
 }

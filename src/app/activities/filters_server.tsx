@@ -3,6 +3,7 @@ import { getAllTagsData, type ActivityTagDBType } from "~/utils/activity";
 import { FiltersClientSide } from "./filters_client";
 import type { PageProps_ } from "./page";
 import { parseTagFilters } from "./utils";
+import { prisma } from "lib/prisma";
 
 export async function Filters(props: PageProps_) {
     // let rawTagFilter: string|undefined;
@@ -11,18 +12,11 @@ export async function Filters(props: PageProps_) {
         ? searchParams["tag_filters"][0]
         : searchParams["tag_filters"];
 
-    let chosenTagsList: string[] | undefined;
-    let chosenTagsHashset: Set<string> = new Set();
+    let chosenTags: string[] = [];
     if (rawTagFilters && rawTagFilters != "") {
-        chosenTagsList = parseTagFilters(rawTagFilters) ?? [];
-        chosenTagsHashset = new Set(chosenTagsList);
+        chosenTags = parseTagFilters(rawTagFilters) ?? [];
     }
-    const tagData: Map<string, ActivityTagDBType> = await getAllTagsData();
-    // tagData.forEach((val, key)=>{console.debug(`${JSON.stringify(key)}=${JSON.stringify(val)}`)})
-    return (
-        <FiltersClientSide
-            tagsData={tagData}
-            chosenTagsHashset={chosenTagsHashset}
-        />
-    );
+    const tags = await prisma.activityTag.findMany();
+
+    return <FiltersClientSide tags={tags} chosenTags={chosenTags} />;
 }

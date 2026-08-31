@@ -1,54 +1,19 @@
 "use server";
 import type { ReactNode, MouseEvent as ReactMouseEvent } from "react";
 import type { Activity, ActivityProperties } from "generated/prisma";
-import { getTextColorBasedOnBacgroundColor } from "./colors";
 import { prisma } from "lib/prisma";
+import { Tag } from "~/components/tag";
 
 export async function getActivityTagsJSX(activity: Activity) {
-    const tags = await GetActivityProperites(activity.id);
-    if (!tags) {
+    const properties = await GetActivityProperties(activity.id);
+    if (!properties) {
         return [];
     }
-    const tags_elemets = tags.tags.map((tag) => (
-        <ActivityTag
-            name={tag.name}
-            color={tag.tagColor}
-            key={`type-${tag.name}`}
-        />
+    const tags_elemets = properties.tags.map((tag) => (
+        <Tag tag={tag} key={tag.name} />
     ));
 
     return tags_elemets;
-}
-
-export async function ActivityTag(props: { name: string; color: string }) {
-    const { name, color } = props;
-    const backgroundOpacity = 64;
-    if (!(0 <= backgroundOpacity && backgroundOpacity <= 255)) {
-        return (
-            <div className="rounded-xl border-2 px-1 text-[11px]">
-                Error loading tag: invalid backgroundOpacity value.
-            </div>
-        );
-    }
-    const backgroundColorHEX = backgroundOpacity.toString(16); // 16 means to hexadecimal - for rgb notation
-    return (
-        <div
-            key={name}
-            className="my-0 max-h-6 rounded-xl border-2 px-1 text-[13px]"
-            // Note: we need to use the style attribute, because tailwindcss has problems with dynamically generating colors
-            // Unrelated note: We apply the color to border and make background the same color with smaller opacity
-            style={{
-                borderColor: color,
-                backgroundColor: `${color}${backgroundColorHEX}`,
-                color:
-                    getTextColorBasedOnBacgroundColor(
-                        `${color}${backgroundColorHEX}`,
-                    ) ?? "#000000",
-            }}
-        >
-            {name}
-        </div>
-    );
 }
 
 export async function ActivityElement(
@@ -63,7 +28,7 @@ export async function ActivityElement(
             key={id}
             className="border-slsk-blue-dark h-60 min-w-80 flex-1 overflow-hidden rounded-md border-2 transition-all duration-150 hover:bg-gray-100 hover:shadow-lg"
         >
-            <a href={`/activity/${id}`} className="flex h-full flex-col p-2">
+            <a href={`/activities/${id}`} className="flex h-full flex-col p-2">
                 <div>
                     <div className="text-align-center ml-1">
                         <p className="text-2xl font-bold">{name}</p>
@@ -78,7 +43,7 @@ export async function ActivityElement(
                     </p>
                 </div>
                 <div className="mt-auto flex items-center justify-between gap-1">
-                    <div className="flex flex-wrap gap-x-0.5 gap-y-1">
+                    <div className="flex flex-wrap gap-x-0.5 gap-y-1 text-sm">
                         {tags}
                     </div>
                 </div>
@@ -136,7 +101,7 @@ export async function getAllTagsData(): Promise<
     return tag_hashmap;
 }
 
-export async function GetActivityProperites(id: number) {
+export async function GetActivityProperties(id: number) {
     const activity = await GetActivity(id);
     if (!activity || !activity.properties || !activity.properties?.id) {
         return null;
