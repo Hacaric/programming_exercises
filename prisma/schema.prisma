@@ -15,74 +15,32 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-// model ActivityDurationGruop {
-//  name             String  @id
-//  acitvityTags     activityProperites[]
-//  minDuration      DateTime
-//  maxDuration      DateTime
-//  tagColor         String
-// }
-
-// model ActivityAgeGroup {
-//   name             String       @id
-//   tagColor         String
-//   activityProperites     ActivityProperties[]
-// }
-
-// model ActivityType {
-//   activityProperites     ActivityProperties[]
-//   name             String   @id
-//   tagColor         String
-// }
-
-// model ActivityPreparation {
-//   activityProperites     ActivityProperties[]
-//   name             String   @id
-//   tagColor         String
-// }
-
-// model ActivityEnviroment {
-//   activityProperites     ActivityProperties[]
-//   name             String   @id
-//   tagColor         String
-// }
-
 enum ActivityTagType {
-  AGE_GROUP
-  ACITIVITY_TYPE
-  PREPARATION
-  ENVIROMENT
+    AGE_GROUP
+    ACITIVITY_TYPE
+    PREPARATION
+    ENVIROMENT
 }
 
 model ActivityTag {
-  belongsToActivityProperties ActivityProperties[]
-  name          String   @id
-  tagColor      String
-  type          ActivityTagType
-}
-
-model ActivityProperties {
-  id            Int      @id @default(autoincrement())
-  activity      Activity @relation(fields: [activityID], references: [id])
-  activityID    Int      @unique
-  tags          ActivityTag[]
-  // ageGroups     ActivityAgeGroup[]
-  // activityType  ActivityType[]
-  // preparation   ActivityPreparation[]
-  // enviroments   ActivityEnviroment[]
-//  durationGruop ActivityDurationGruop[]
-  minDurationMinutes Int
-  maxDurationMinutes Int
-  neededItems   String?
+    name       String          @id
+    tagColor   String
+    type       ActivityTagType
+    activities Activity[]
 }
 
 model Activity {
-  id            Int      @id @default(autoincrement())
-  name          String
-  description   String   @db.Text // @db.Text to allow long strings
-  properties    ActivityProperties? 
-  
-  views         Int      @default(0)
+    id          Int    @id @default(autoincrement())
+    name        String
+    description String @db.Text // @db.Text to allow long strings
+
+    neededItems        String?
+    minDurationMinutes Int?
+    maxDurationMinutes Int
+
+    tags ActivityTag[]
+
+    views Int @default(0)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

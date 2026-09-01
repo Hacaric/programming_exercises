@@ -1,15 +1,13 @@
 "use client";
-import type { ActivityTagDBType } from "~/utils/activity";
 import {
     ReadonlyURLSearchParams,
     useRouter,
     useSearchParams,
 } from "next/navigation";
-import type { JSX } from "react";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { parseTagFilters } from "./utils";
 import { Tag } from "~/components/tag";
-import type { Activity, ActivityTag } from "generated/prisma";
+import type { ActivityTag } from "generated/prisma";
 
 // export function ActivityTagFilter(props: {name: string, color: string, tag: ActivityTagDBType}) {
 //     const {name, color, tag} = props;
@@ -107,46 +105,6 @@ function handleTagClick(
 
     params.set("tag_filters", JSON.stringify(filters_parsed));
     router.push(`?${params.toString()}`);
-}
-
-function ActivityTag(props: { tagData: ActivityTagDBType }) {
-    const searchParamsReadOnly = useSearchParams();
-    const router = useRouter();
-
-    const { tagData } = props;
-    const name = tagData.name;
-    const color = tagData.tagColor;
-
-    const backgroundOpacity = 64;
-    if (!(0 <= backgroundOpacity && backgroundOpacity <= 255)) {
-        return (
-            <div className="rounded-xl border-2 px-1 text-[11px]">
-                Error loading tag: invalid backgroundOpacity value.
-            </div>
-        );
-    }
-    const backgroundColorHEX = backgroundOpacity.toString(16); // 16 means to hexadecimal - for rgb notation
-    return (
-        <div
-            key={name}
-            onClick={(event) => {
-                handleTagClick(tagData, searchParamsReadOnly, router);
-            }}
-            className="rounded-md border-2 px-1"
-            // Note: we need to use the style attribute, because tailwindcss has problems with dynamically generating colors
-            // Unrelated note: We apply the color to border and make background the same color with smaller opacity
-            style={{
-                borderColor: color,
-                backgroundColor: `${color}${backgroundColorHEX}`,
-                color:
-                    getTextColorBasedOnBacgroundColor(
-                        `${color}${backgroundColorHEX}`,
-                    ) ?? "#000000",
-            }}
-        >
-            {name}
-        </div>
-    );
 }
 
 export function SelectTags(props: { tags: ActivityTag[] }) {

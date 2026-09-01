@@ -137,20 +137,16 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
-            properties: {
-                create: {
-                    minDurationMinutes: 15,
-                    maxDurationMinutes: 45,
-                    neededItems: "2 Lopty",
-                    tags: {
-                        connect: [
-                            { name: "Skauti" },
-                            { name: "Na von" },
-                            { name: "Jednoduchá príprava" },
-                            { name: "Hra" },
-                        ],
-                    },
-                },
+            minDurationMinutes: 15,
+            maxDurationMinutes: 45,
+            neededItems: "2 Lopty",
+            tags: {
+                connect: [
+                    { name: "Skauti" },
+                    { name: "Na von" },
+                    { name: "Jednoduchá príprava" },
+                    { name: "Hra" },
+                ],
             },
         },
     });
@@ -161,21 +157,17 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
-            properties: {
-                create: {
-                    minDurationMinutes: 20,
-                    maxDurationMinutes: 120,
-                    neededItems: "Stolová hra 'Avalon: The resistance'",
-                    tags: {
-                        connect: [
-                            { name: "Skauti" },
-                            { name: "Rangeri" },
-                            { name: "Na vnútro" },
-                            { name: "Jednoduchá príprava" },
-                            { name: "Hra" },
-                        ],
-                    },
-                },
+            minDurationMinutes: 20,
+            maxDurationMinutes: 120,
+            neededItems: "Stolová hra 'Avalon: The resistance'",
+            tags: {
+                connect: [
+                    { name: "Skauti" },
+                    { name: "Rangeri" },
+                    { name: "Na vnútro" },
+                    { name: "Jednoduchá príprava" },
+                    { name: "Hra" },
+                ],
             },
         },
     });
@@ -186,20 +178,16 @@ async function main() {
             createdBy: {
                 connect: { id: user.id },
             },
-            properties: {
-                create: {
-                    minDurationMinutes: 5,
-                    maxDurationMinutes: 15,
-                    tags: {
-                        connect: [
-                            { name: "Skauti" },
-                            { name: "Rangeri" },
-                            { name: "Na vnútro" },
-                            { name: "Jednoduchá príprava" },
-                            { name: "Hra" },
-                        ],
-                    },
-                },
+            minDurationMinutes: 5,
+            maxDurationMinutes: 15,
+            tags: {
+                connect: [
+                    { name: "Skauti" },
+                    { name: "Rangeri" },
+                    { name: "Na vnútro" },
+                    { name: "Jednoduchá príprava" },
+                    { name: "Hra" },
+                ],
             },
         },
     });

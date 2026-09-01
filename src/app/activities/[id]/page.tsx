@@ -1,6 +1,7 @@
 // TODO: increase activity.views counter
 
-import { GetActivity, getActivityTagsJSX } from "~/utils/activity";
+import { Tags } from "~/components/tags";
+import { getActivityWithTags } from "~/lib/activity";
 
 export default async function ActivityDetail({
     params,
@@ -15,21 +16,20 @@ export default async function ActivityDetail({
         );
     }
 
-    const activity = await GetActivity(id);
+    const activity = await getActivityWithTags(id);
     if (!activity) {
         return (
             <p className="ml-10">{`Error loading activity: Activity with ID ${id_raw} not found.`}</p>
         );
     }
 
-    const tags = await getActivityTagsJSX(activity);
     return (
         <div className="border-slsk-blue-dark flex flex-col gap-2 rounded-2xl border-2 p-5">
             <div className="text-align-center">
                 <h3 className="text-3xl font-bold">{activity.name}</h3>
             </div>
             <div className="flex flex-wrap content-end gap-x-0.5 gap-y-1">
-                {tags}
+                <Tags tags={activity.tags} />
             </div>
             <div>
                 <h5 className="text-lg font-bold">Popis:</h5>

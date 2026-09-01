@@ -2,16 +2,15 @@ import { getActivitiesFromRawFilters } from "./actions";
 import { SearchBar } from "./searchbar";
 import { ActivityList } from "./activitylist";
 import { Filters } from "./filters_server";
-import type { JSX } from "react";
+import type { ActivityWithTags } from "~/lib/types";
 
 export interface PageProps_ {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function ListActivities({ searchParams }: PageProps_) {
-    // console.log(`SEARCH PARAMS: ${JSON.stringify(searchParams)}`);
     const searchParamsAwaited = await searchParams;
-    let activities: JSX.Element[] = [];
+    let activities: ActivityWithTags[] = [];
 
     if (searchParamsAwaited) {
         let query: string[] | string | null = searchParamsAwaited["q"] ?? null;

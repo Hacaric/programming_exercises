@@ -1,13 +1,9 @@
 "use server";
-import {
-    ActivityElement,
-    ActivityTag,
-    getActivityTagsJSX,
-} from "../../utils/activity";
-import type { Activity, ActivityProperties } from "generated/prisma";
+import type { Activity } from "generated/prisma";
 import { prisma } from "lib/prisma";
-import type { JSX } from "react";
 import { parseTagFilters } from "./utils";
+import type { ActivityWithTags } from "~/lib/types";
+import { getActivitiesWithTags } from "~/lib/activity";
 // import { ActivityTagFilter, handleTagClick } from "./tagFilterClick";
 
 /**
@@ -26,15 +22,12 @@ function countSubstringOccurences(main: string, searchString: string) {
  * @param query
  * @returns {activity: Activity, match_score: number}
  */
-function scoreQueryMatches(
-    activity: Activity,
-    query: string | null,
-): { activity: Activity; match_score: number } {
+function scoreQueryMatches(activity: Activity, query: string | null): number {
     const NAME_MATCH_WEIGHT = 15;
     const DESCRIPTION_MATCH_WEIGHT = 1;
 
     if (!query || query == "") {
-        return { activity, match_score: 1 };
+        return 1;
     }
     console.debug(
         `Scoring query '${query}' against acitvity name '${activity.name}'...`,
@@ -71,14 +64,10 @@ function scoreQueryMatches(
     });
     if (failed_to_find_required_word) {
         console.debug(`Match score: 0 (failed to find required queryword)`);
-        return { activity, match_score: 0 };
+        return 0;
     }
     console.debug(`Match score: ${score}.`);
-    return { activity, match_score: score };
-}
-
-function removeDuplicates<T>(arr: Array<T>): Array<T> {
-    return [...new Set(arr)];
+    return score;
 }
 
 /**
@@ -89,54 +78,22 @@ function removeDuplicates<T>(arr: Array<T>): Array<T> {
  */
 export async function GetActivitiesFiltered(
     query: string | null,
-    accepted_activity_ids_set?: Set<number>,
-): Promise<JSX.Element[]> {
-    //
-    //   !!! WATCH OUT !!! BAD CODE AHEAD, pls rewrite
-    //
+    accepted_activites?: ActivityWithTags[],
+): Promise<ActivityWithTags[]> {
     console.debug(`Getting activities...`);
-    let all_activities;
-    if (accepted_activity_ids_set) {
-        const accepted_activity_ids = Array.from(accepted_activity_ids_set);
-        console.debug(
-            `Found filters: ${JSON.stringify(accepted_activity_ids)}`,
-        );
-        all_activities = await prisma.activity.findMany({
-            where: {
-                id: {
-                    in: accepted_activity_ids,
-                },
-            },
-        });
-    } else {
-        console.debug(`No filters found, returning all activities.`);
-        all_activities = await prisma.activity.findMany();
-    }
 
-    // TODO: not pull every activity, only a fixed amount, probably pull from the db until enogh activities found; for now it'll (maybe) be faster to pull everything at once
-    const activities = await Promise.all(
-        all_activities
-            // Assign every element its score, match in name gives more than match in description
-            // No match will result in score=0
-            .map((activity) => scoreQueryMatches(activity, query))
+    let all_activities: ActivityWithTags[];
+    if (!accepted_activites) all_activities = await getActivitiesWithTags();
+    else all_activities = accepted_activites;
 
-            // Exclude activities with no matches
-            .filter(({ activity, match_score }) => match_score > 0)
+    const activities = all_activities
+        .map((activity) => {
+            return { activity, score: scoreQueryMatches(activity, query) };
+        })
+        .filter(({ score }) => score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(({ activity }) => activity);
 
-            // Sort activities based on how many matches were found
-            .sort((a, b) => b.match_score - a.match_score)
-
-            // Make raw Activity data into JSX element with proper tags
-            .map(async ({ activity, match_score }) => {
-                const tags = await getActivityTagsJSX(activity);
-                return await ActivityElement(
-                    activity.id,
-                    activity.name,
-                    activity.description,
-                    tags,
-                );
-            }),
-    );
     return activities;
 }
 
@@ -170,32 +127,26 @@ function findElementsContainedInEveryArray<T>(...arrays: T[][]): T[] {
 export async function getActivitiesFromRawFilters(
     query: string | null,
     tag_filters_raw: string | null,
-): Promise<JSX.Element[]> {
+): Promise<ActivityWithTags[]> {
     let tag_filters_parsed = parseTagFilters(tag_filters_raw);
     if (!tag_filters_parsed || tag_filters_parsed.length == 0) {
         return await GetActivitiesFiltered(query);
     }
-    let tagActivityIDs: number[][] = [];
-    const tags = await prisma.activityTag.findMany({
+
+    const activities = await prisma.activity.findMany({
         where: {
-            name: { in: tag_filters_parsed },
+            AND: tag_filters_parsed.map((tagName) => ({
+                tags: {
+                    some: {
+                        name: tagName,
+                    },
+                },
+            })),
         },
         include: {
-            belongsToActivityProperties: true,
+            tags: true,
         },
     });
 
-    tags.forEach((tag) => {
-        tagActivityIDs.push(
-            tag.belongsToActivityProperties.map(
-                (activityProperties) => activityProperties.activityID,
-            ),
-        );
-    });
-
-    const acceptedActivities = new Set(
-        findElementsContainedInEveryArray(...tagActivityIDs),
-    );
-
-    return await GetActivitiesFiltered(query, acceptedActivities);
+    return await GetActivitiesFiltered(query, activities);
 }
