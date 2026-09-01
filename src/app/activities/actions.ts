@@ -26,13 +26,13 @@ function scoreQueryMatches(activity: Activity, query: string | null): number {
     const NAME_MATCH_WEIGHT = 15;
     const DESCRIPTION_MATCH_WEIGHT = 1;
 
-    if (!query || query == "") {
+    if (!query || query.trim() == "") {
         return 1;
     }
     console.debug(
         `Scoring query '${query}' against acitvity name '${activity.name}'...`,
     );
-    const query_words = query.toLowerCase().split(" ");
+    const query_words = query.toLowerCase().split(" ").filter(word => word.trim() != "");
     var score = 0;
     var failed_to_find_required_word = false;
     query_words.forEach((query_word) => {
