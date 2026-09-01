@@ -7,7 +7,7 @@ import {
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { parseTagFilters } from "./utils";
 import { Tag } from "~/components/tag";
-import type { ActivityTag } from "generated/prisma";
+import { ActivityTagType, type ActivityTag } from "generated/prisma";
 
 // export function ActivityTagFilter(props: {name: string, color: string, tag: ActivityTagDBType}) {
 //     const {name, color, tag} = props;
@@ -111,15 +111,19 @@ export function SelectTags(props: { tags: ActivityTag[] }) {
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    return props.tags.map((tag) => (
-        <button
-            onClick={() => handleTagClick(tag, searchParams, router)}
-            className="cursor-pointer"
-            key={tag.name}
-        >
-            <Tag tag={tag} />
-        </button>
-    ));
+    return (
+        <div className="flex flex-wrap gap-0.5">
+            {props.tags.map((tag) => (
+                <button
+                    onClick={() => handleTagClick(tag, searchParams, router)}
+                    className="cursor-pointer"
+                    key={tag.name}
+                >
+                    <Tag tag={tag} />
+                </button>
+            ))}
+        </div>
+    );
 }
 
 export function FiltersClientSide(props: {
@@ -134,6 +138,13 @@ export function FiltersClientSide(props: {
         (tag) => !rawChosenTags.includes(tag.name),
     );
 
+    const category_labels: Record<ActivityTagType, string> = {
+        ACTIVITY_TYPE: "Typ aktivity",
+        AGE_GROUP: "Vekové kategórie",
+        ENVIROMENT: "Prostredie",
+        PREPARATION: "Príprava"
+    }
+
     return (
         <div>
             <h4 className="text-xl font-semibold">Vybrané parametre:</h4>
@@ -145,8 +156,15 @@ export function FiltersClientSide(props: {
                 <span className="ml-1 italic">Žiadne</span>
             )}
             <h4 className="text-xl font-semibold">Ostatné parametre:</h4>
-            <div className="flex flex-wrap gap-px">
-                <SelectTags tags={unchosenTags} />
+            <div className="flex flex-col gap-1">
+                {Object.entries(category_labels).map(([key, label]) => <div key={key}>
+                    <h6 className="font-semibold">{label}:</h6>
+                    <SelectTags
+                        tags={unchosenTags.filter(
+                            (tag) => tag.type == key,
+                        )}
+                    />
+                </div>)}
             </div>
         </div>
     );

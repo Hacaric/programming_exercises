@@ -89,17 +89,17 @@ async function main() {
             {
                 name: "Hra",
                 tagColor: "#9f00a7",
-                type: ActivityTagType.ACITIVITY_TYPE,
+                type: ActivityTagType.ACTIVITY_TYPE,
             },
             {
                 name: "Duchovno",
                 tagColor: "#7777b0",
-                type: ActivityTagType.ACITIVITY_TYPE,
+                type: ActivityTagType.ACTIVITY_TYPE,
             },
             {
                 name: "Zručnosti",
                 tagColor: "#1b6c00",
-                type: ActivityTagType.ACITIVITY_TYPE,
+                type: ActivityTagType.ACTIVITY_TYPE,
             },
         ],
     });

@@ -17,7 +17,7 @@ datasource db {
 
 enum ActivityTagType {
     AGE_GROUP
-    ACITIVITY_TYPE
+    ACTIVITY_TYPE
     PREPARATION
     ENVIROMENT
 }

@@ -32,7 +32,10 @@ function scoreQueryMatches(activity: Activity, query: string | null): number {
     console.debug(
         `Scoring query '${query}' against acitvity name '${activity.name}'...`,
     );
-    const query_words = query.toLowerCase().split(" ").filter(word => word.trim() != "");
+    const query_words = query
+        .toLowerCase()
+        .split(" ")
+        .filter((word) => word.trim() != "");
     var score = 0;
     var failed_to_find_required_word = false;
     query_words.forEach((query_word) => {
