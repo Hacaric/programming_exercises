@@ -14,7 +14,7 @@ export function Navbar() {
                 <a href="/" className={linkStyle}>
                     Domov
                 </a>
-                <a href="/activities" className={linkStyle}>
+                <a href="/activity" className={linkStyle}>
                     Všetky aktivity
                 </a>
                 <a

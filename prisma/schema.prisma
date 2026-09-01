@@ -33,6 +33,7 @@ model Activity {
     id          Int    @id @default(autoincrement())
     name        String
     description String @db.Text // @db.Text to allow long strings
+    rules       String @db.Text
 
     neededItems        String?
     minDurationMinutes Int?

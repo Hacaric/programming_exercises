@@ -9,7 +9,7 @@ export function ActivityCard(props: { activity: ActivityWithTags }) {
             key={id}
             className="border-slsk-blue-dark h-60 min-w-80 flex-1 overflow-hidden rounded-md border-2 transition-all duration-150 hover:bg-gray-100 hover:shadow-lg"
         >
-            <a href={`/activities/${id}`} className="flex h-full flex-col p-2">
+            <a href={`/activity/${id}`} className="flex h-full flex-col p-2">
                 <div>
                     <div className="text-align-center ml-1">
                         <p className="text-2xl font-bold">{name}</p>

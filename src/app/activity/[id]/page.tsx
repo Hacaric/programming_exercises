@@ -32,8 +32,11 @@ export default async function ActivityDetail({
                 <Tags tags={activity.tags} />
             </div>
             <div>
-                <h5 className="text-lg font-bold">Popis:</h5>
+                <h5 className="text-xl font-bold mt-3">Popis:</h5>
                 <p className="text-md ml-2">{activity.description}</p>
+
+                <h5 className="text-xl font-bold mt-5">Pravidlá:</h5>
+                <p className="text-md ml-2">{activity.rules}</p>
             </div>
         </div>
     );

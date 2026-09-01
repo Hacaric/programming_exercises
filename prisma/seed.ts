@@ -134,6 +134,7 @@ async function main() {
         data: {
             name: "Sever proti juhu",
             description: "Sever proti juhu je hra, ktorá ...",
+            rules: `Su dva timy, ktore...`,
             createdBy: {
                 connect: { id: user.id },
             },
@@ -154,6 +155,7 @@ async function main() {
         data: {
             name: "Avalon",
             description: `Avalon je hra, ktorá je super! Raz som ju hral a povedal som si: ${LOREM_IPSUM}`,
+            rules: `pravidla...`,
             createdBy: {
                 connect: { id: user.id },
             },
@@ -175,6 +177,7 @@ async function main() {
         data: {
             name: "Ahoj ako sa máš",
             description: `Ahoj ako sa máš je aktivita, ktorá sa hodí na začiatok družinovky. ${LOREM_IPSUM}`,
+            rules: `Ide sa do kola, ten kto je na rade sa niekoho spyta 'Ahoj, ako sa mas?'. Ten mu odpovie a potom sa pyta on.`,
             createdBy: {
                 connect: { id: user.id },
             },
