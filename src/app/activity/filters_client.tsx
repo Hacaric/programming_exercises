@@ -1,82 +1,13 @@
 "use client";
 import {
-    ReadonlyURLSearchParams,
+    type ReadonlyURLSearchParams,
     useRouter,
     useSearchParams,
 } from "next/navigation";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { parseTagFilters } from "./utils";
 import { Tag } from "~/components/tag";
-import { ActivityTagType, type ActivityTag } from "generated/prisma";
-
-// export function ActivityTagFilter(props: {name: string, color: string, tag: ActivityTagDBType}) {
-//     const {name, color, tag} = props;
-
-//     const backgroundOpacity = 64;
-//     if (!(0 <= backgroundOpacity && backgroundOpacity <= 255)) {
-//         return (
-//             <div className="rounded-xl border-2 px-1 text-[11px]">
-//                 Error loading tag: invalid backgroundOpacity value.
-//             </div>
-//         );
-//     }
-//     const backgroundColorHEX = backgroundOpacity.toString(16); // 16 means to hexadecimal - for rgb notation
-//     return (
-//         <div
-//             key={name}
-//             onClick={()=>handleTagClick(tag)}
-//             className="my-0 max-h-6 rounded-xl border-2 px-1 text-[13px]"
-//             // Note: we need to use the style attribute, because tailwindcss has problems with dynamically generating colors
-//             // Unrelated note: We apply the color to border and make background the same color with smaller opacity
-//             style={{
-//                 borderColor: color,
-//                 backgroundColor: `${color}${backgroundColorHEX}`,
-//                 color:
-//                     getTextColorBasedOnBacgroundColor(
-//                         `${color}${backgroundColorHEX}`,
-//                     ) ?? "#000000",
-//             }}
-//         >
-//             {name}
-//         </div>
-//     );
-// }
-
-// function parseTagFilters(tag_filters_raw: string): [number[], string][] | null {
-//     let tag_filters_parsed;
-//     try {
-//         tag_filters_parsed = JSON.parse(tag_filters_raw);
-//     } catch {
-//         console.error(
-//             `Invalid search filter, ignoring: JSON failed to parse '${tag_filters_raw}'`,
-//         );
-//     }
-
-//     if (!Array.isArray(tag_filters_parsed)) {
-//         return null;
-//     }
-
-//     let isValid = true;
-//     tag_filters_parsed.forEach((tag_filter) => {
-//         if (!isValid) {
-//             return;
-//         }
-//         if (
-//             !Array.isArray(tag_filter) ||
-//             tag_filter.length != 2 ||
-//             !Array.isArray(tag_filter[0]) ||
-//             !tag_filter[0].every((e) => typeof e == "number") ||
-//             typeof tag_filter[1] != "number"
-//         ) {
-//             isValid = false;
-//             return;
-//         }
-//     });
-//     if (!isValid) {
-//         return null;
-//     }
-//     return tag_filters_parsed;
-// }
+import type { ActivityTagType, ActivityTag } from "generated/prisma";
 
 function handleTagClick(
     tag: ActivityTag,
@@ -131,40 +62,40 @@ export function FiltersClientSide(props: {
     chosenTags: string[];
 }) {
     "use client";
-    let { tags, chosenTags: rawChosenTags } = props;
+    const { tags, chosenTags: rawChosenTags } = props;
 
     const chosenTags = tags.filter((tag) => rawChosenTags.includes(tag.name));
-    const unchosenTags = tags.filter(
-        (tag) => !rawChosenTags.includes(tag.name),
-    );
 
     const category_labels: Record<ActivityTagType, string> = {
         ACTIVITY_TYPE: "Typ aktivity",
         AGE_GROUP: "Vekové kategórie",
         ENVIROMENT: "Prostredie",
-        PREPARATION: "Príprava"
-    }
+        PREPARATION: "Príprava",
+    };
 
     return (
         <div>
-            <h4 className="text-xl font-semibold">Vybrané parametre:</h4>
-            {chosenTags.length > 0 ? (
-                <div className="flex flex-wrap gap-px">
-                    <SelectTags tags={chosenTags} />
-                </div>
-            ) : (
-                <span className="ml-1 italic">Žiadne</span>
+            <h3 className="text-center text-2xl font-bold">Filter</h3>
+            {chosenTags.length > 0 && (
+                <>
+                    <h4 className="text-xl font-semibold">
+                        Vybrané parametre:
+                    </h4>
+                    <div className="flex flex-wrap gap-px">
+                        <SelectTags tags={chosenTags} />
+                    </div>
+                </>
             )}
-            <h4 className="text-xl font-semibold">Ostatné parametre:</h4>
+            <h4 className="text-xl font-semibold">Všetky parametre:</h4>
             <div className="flex flex-col gap-1">
-                {Object.entries(category_labels).map(([key, label]) => <div key={key}>
-                    <h6 className="font-semibold">{label}:</h6>
-                    <SelectTags
-                        tags={unchosenTags.filter(
-                            (tag) => tag.type == key,
-                        )}
-                    />
-                </div>)}
+                {Object.entries(category_labels).map(([key, label]) => (
+                    <div key={key}>
+                        <h6 className="font-semibold">{label}:</h6>
+                        <SelectTags
+                            tags={tags.filter((tag) => tag.type == key)}
+                        />
+                    </div>
+                ))}
             </div>
         </div>
     );
