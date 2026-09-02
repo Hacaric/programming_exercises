@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { username } from "better-auth/plugins";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
@@ -11,6 +12,7 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
+    plugins: [username()],
     socialProviders: {
         github: {
             clientId: env.BETTER_AUTH_GITHUB_CLIENT_ID,

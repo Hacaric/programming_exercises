@@ -1,4 +1,3 @@
-// @ts-ignore
 import "~/styles/globals.css";
 
 import { type Metadata } from "next";
