@@ -120,14 +120,28 @@ async function main() {
 
     // Ensure a creator user exists
     const user = await prisma.user.upsert({
+        where: { id: "system" },
+        update: {},
+        create: {
+            id: "system",
+            name: "system",
+            username: "system",
+            displayUsername: "system",
+            email: "ustredie@skauting.sk",
+        },
+    });
+
+    const admin = await prisma.user.upsert({
         where: { id: "admin" },
         update: {},
         create: {
             id: "admin",
             name: "admin",
-            email: "example@exaple.com",
-        },
-    });
+            username: "admin",
+            displayUsername: "admin",
+            email: "ustredie+a@skauting.sk"
+        }
+    })
 
     // Create Activity with related activityProperites
     await prisma.activity.create({
