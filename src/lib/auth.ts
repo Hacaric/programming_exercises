@@ -22,21 +22,19 @@ export async function signIn({
 
 export async function signUp({
     email,
-    name,
     username,
     password,
 }: {
     email: string;
-    name: string;
     username: string;
     password: string;
 }) {
     const { data, error } = await authClient.signUp.email({
         email,
-        name,
+        name: username,
         username,
-        displayUsername: username,
         password,
     });
+    console.log(error)
     return { data, error }
 }

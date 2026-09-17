@@ -104,19 +104,6 @@ async function main() {
         ],
     });
 
-    // Fetch created tag references to get their generated IDs
-    // const ageGroup = await prisma.activityAgeGroup.findFirst({
-    //   where: { name: 'Skauti' },
-    // })
-    // const environment = await prisma.activityEnviroment.findFirst({
-    //   where: { name: 'Na von' },
-    // })
-    // const preparation = await prisma.activityPreparation.findFirst({
-    //   where: { name: 'Žiadna príprava' },
-    // })
-    // const type = await prisma.activityType.findFirst({
-    //   where: { name: 'Hra' },
-    // })
 
     // Ensure a creator user exists
     const user = await prisma.user.upsert({
@@ -126,7 +113,6 @@ async function main() {
             id: "system",
             name: "system",
             username: "system",
-            displayUsername: "system",
             email: "ustredie@skauting.sk",
         },
     });
@@ -138,7 +124,6 @@ async function main() {
             id: "admin",
             name: "admin",
             username: "admin",
-            displayUsername: "admin",
             email: "ustredie+a@skauting.sk"
         }
     })
