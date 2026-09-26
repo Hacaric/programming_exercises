@@ -1,6 +1,16 @@
-export function Navbar() {
+import { headers } from "next/headers";
+import { auth } from "~/server/better-auth";
+
+export async function Navbar() {
+    const session = await auth.api.getSession({
+        headers: await headers(), // Required to read session cookies
+    });
+    // console.log(`\n\n[debug] Session: ${JSON.stringify(session)}\n\n`)
+
+    // TODO: make this a tailwindcss class
     const linkStyle =
         "cursor-pointer hover:text-slsk-yellow transition-colors duration-100";
+
     return (
         <div className="bg-slsk-blue-dark sticky top-0 flex h-16 items-center gap-5 p-2 px-4 font-bold text-white">
             <a href="/" className="content-center">
@@ -24,6 +34,26 @@ export function Navbar() {
                     REZNE ZDARMA
                 </a>
             </div>
+
+            
+            <div className="flex-1"></div>
+            
+            
+            {!session && 
+                <div className="flex-none">
+                    <a href="/login" className={linkStyle + " mr-5"}>
+                        Login
+                    </a>
+                    <a href="/register" className={linkStyle}>
+                        Register
+                    </a>
+                </div>
+            }
+            {session &&
+                <div>
+                    <a href="/account">Logged in as {session?.user.name}</a>
+                </div>
+            }
         </div>
     );
 }

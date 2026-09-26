@@ -1,4 +1,5 @@
 "use client";
+import { prisma } from "lib/prisma";
 import { redirect } from "next/navigation";
 import { authClient } from "~/server/better-auth/client";
 
@@ -18,6 +19,9 @@ export async function signIn({
             onSuccess: redirect("/"),
         },
     );
+    if (error) 
+        console.error(`Error signing in: ${JSON.stringify(error)}`)
+    return { data, error };
 }
 
 export async function signUp({
@@ -35,6 +39,23 @@ export async function signUp({
         username,
         password,
     });
-    console.log(error)
-    return { data, error }
+    if (error)
+        console.log(`Error signing up: ${JSON.stringify(error)}`);
+    return { data, error };
 }
+
+// export async function client_getSession() {
+//     return await authClient.getSession();
+// }
+
+// export async function client_isUserLoggedIn() {
+//     return await client_getSession() ? true : false;
+// }
+
+// export async function client_getUserData() {
+//     const session = await client_getSession();
+//     if (!session) 
+//         return null;
+//     return session.data?.user ?? null;
+// }
+

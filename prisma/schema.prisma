@@ -110,6 +110,9 @@ model Account {
     password              String? //@db.Text
     createdAt             DateTime  @default(now())
     updatedAt             DateTime  @updatedAt
+    
+    // Better auth needs this for some reason????
+    issuer                String?
 
     @@map("account")
 }
