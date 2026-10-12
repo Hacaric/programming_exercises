@@ -13,6 +13,7 @@ export default function RegisterPage() {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [passwordRepeat, setPasswordRepeat] = useState<string>("");
+    const [errorMsg, setErrorMsg] = useState<string>("");
 
     async function register() {
         const { data, error } = await signUp({ username, email, password });
@@ -23,6 +24,7 @@ export default function RegisterPage() {
         console.log(`Signup returned data: ${data}`);
         const {data: data_login, error: error_login} = await signIn({ username, password });
         if (error_login) {
+            setErrorMsg(error_login.message ?? 'Error returned, but no error message returned');
             console.error(error_login);
             return;
         }
@@ -53,6 +55,8 @@ export default function RegisterPage() {
                 <button type="submit" className="rounded-md border-2 border-slsk-blue-dark text-slsk-blue-dark hover:bg-slsk-blue-dark hover:text-white transition-all duration-150 text-xl cursor-pointer" disabled={!allowSubmit()}>Registrovať sa</button>
                 
                 <p className="text-sm">Máte už účet? <a href='/login' className="text-slsk-blue-dark underline">Prihlásiť sa</a></p>
+
+                {errorMsg && <p className="text-red-600 italic text-sm">{errorMsg}</p>}
             </form>
         </div>
     )
