@@ -7,9 +7,7 @@ import { prisma } from "lib/prisma";
 export async function Filters(props: PageProps_) {
     // let rawTagFilter: string|undefined;
     const searchParams = await props.searchParams;
-    const rawTagFilters = Array.isArray(searchParams["tag_filters"])
-        ? searchParams["tag_filters"][0]
-        : searchParams["tag_filters"];
+    const rawTagFilters = searchParams["tag_filters"];
 
     let chosenTags: string[] = [];
     if (rawTagFilters && rawTagFilters != "") {

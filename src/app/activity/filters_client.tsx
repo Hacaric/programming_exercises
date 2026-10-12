@@ -9,7 +9,7 @@ import { parseTagFilters } from "./utils";
 import { Tag } from "~/components/tag";
 import type { ActivityTagType, ActivityTag } from "generated/prisma";
 
-function handleTagClick(
+function addTagFilter(
     tag: ActivityTag,
     searchParamsReadOnly: ReadonlyURLSearchParams,
     router: AppRouterInstance,
@@ -17,36 +17,55 @@ function handleTagClick(
     const params = new URLSearchParams(searchParamsReadOnly.toString());
     const filters = params.get("tag_filters");
 
-    // console.debug(`Hadling tag click: got filters(raw): ${filters}`);
+    console.debug(`Adding tag filter: got filters(raw): ${filters}`);
     let filters_parsed: string[] = [];
     if (filters && filters != "") {
-        filters_parsed = parseTagFilters(filters) ?? []; // parseTagFilters(filters)?.map((f)=>JSON.stringify(f)) ?? [];
+        filters_parsed = parseTagFilters(filters) ?? [];
     }
-    // console.debug(`Parsed tag filters: ${JSON.stringify(filters_parsed)}`);
     const current_tag_filter: string = tag.name;
 
     if (filters_parsed.includes(current_tag_filter)) {
-        filters_parsed.splice(filters_parsed.indexOf(current_tag_filter), 1);
-    } else {
-        filters_parsed.push(current_tag_filter);
+        return;
     }
-    // console.debug(
-    //     `Done proper action with ${JSON.stringify(current_tag_filter)}: FILTERS = ${JSON.stringify(filters_parsed)}`,
-    // );
+    params.append("tag_filters", current_tag_filter);
 
-    params.set("tag_filters", JSON.stringify(filters_parsed));
     router.push(`?${params.toString()}`);
 }
 
-export function SelectTags(props: { tags: ActivityTag[] }) {
+function deleteTagFilter(
+    tag: ActivityTag,
+    searchParamsReadOnly: ReadonlyURLSearchParams,
+    router: AppRouterInstance,
+) {
+    const params = new URLSearchParams(searchParamsReadOnly.toString());
+    const filters = params.get("tag_filters");
+    console.debug(`Deleting tag filter: got filters(raw): '${filters}'`);
+
+    // let filters_parsed: string[] = [];
+    // if (filters && filters != "") {
+    //     filters_parsed = parseTagFilters(filters) ?? [];
+    // }
+
+    // filters_parsed.forEach(f => console.log(`f: '${f}' comp: '${tag.name}' eq: ${f == tag.name}`))
+    // filters_parsed = filters_parsed.filter(f=>f != tag.name);
+    // console.log(`Final: ${JSON.stringify(filters)}`)
+
+    params.delete("tag_filters", tag.name);
+
+    console.log(`Delted '${tag.name}', params: ${params}'`)
+    router.push(`?${params.toString()}`);
+}
+
+export function ClickableTagList(props: { tags: ActivityTag[], action: "select"|"deselect"}) {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const {tags, action} = props;
 
     return (
         <div className="flex flex-wrap gap-0.5">
-            {props.tags.map((tag) => (
+            {tags.map((tag) => (
                 <button
-                    onClick={() => handleTagClick(tag, searchParams, router)}
+                    onClick={action=="select" ? () => addTagFilter(tag, searchParams, router) : () => deleteTagFilter(tag, searchParams, router)}
                     className="cursor-pointer"
                     key={tag.name}
                 >
@@ -82,7 +101,7 @@ export function FiltersClientSide(props: {
                         Vybrané parametre:
                     </h4>
                     <div className="flex flex-wrap gap-px">
-                        <SelectTags tags={chosenTags} />
+                        <ClickableTagList tags={chosenTags} action="deselect" />
                     </div>
                 </>
             )}
@@ -91,8 +110,9 @@ export function FiltersClientSide(props: {
                 {Object.entries(category_labels).map(([key, label]) => (
                     <div key={key}>
                         <h6 className="font-semibold">{label}:</h6>
-                        <SelectTags
+                        <ClickableTagList
                             tags={tags.filter((tag) => tag.type == key)}
+                            action="select"
                         />
                     </div>
                 ))}
