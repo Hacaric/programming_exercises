@@ -56,22 +56,30 @@ function deleteTagFilter(
     router.push(`?${params.toString()}`);
 }
 
-export function ClickableTagList(props: { tags: ActivityTag[], action: "select"|"deselect"}) {
+export function ClickableTagList(props: { tags: ActivityTag[], action: "select"|"deselect", disabled?: ActivityTag[]}) {
     const searchParams = useSearchParams();
     const router = useRouter();
-    const {tags, action} = props;
+    const {tags, action, disabled:disabled_raw} = props;
+    const disabled: Set<ActivityTag> = disabled_raw ? new Set(disabled_raw) : new Set();
 
     return (
         <div className="flex flex-wrap gap-0.5">
-            {tags.map((tag) => (
-                <button
-                    onClick={action=="select" ? () => addTagFilter(tag, searchParams, router) : () => deleteTagFilter(tag, searchParams, router)}
-                    className="cursor-pointer"
+            {tags.map((tag) => {
+                const is_disabled = disabled.has(tag);
+                return <button
+                    onClick={action=="select"&&!is_disabled ? () => addTagFilter(tag, searchParams, router) : () => deleteTagFilter(tag, searchParams, router)}
+                    className={is_disabled ? `cursor-pointer` : `cursor-pointer`}
                     key={tag.name}
                 >
-                    <Tag tag={tag} />
+                    <Tag 
+                        tag={tag} 
+                        overwriteBorderColor={is_disabled ? "#bbb" : undefined} 
+                        overwriteBackgroundColor={is_disabled ? "#f0f0f0" : undefined} 
+                        textColor={is_disabled ? "#222" : undefined} 
+                        italicFont={is_disabled}
+                    />
                 </button>
-            ))}
+            })}
         </div>
     );
 }
@@ -84,6 +92,7 @@ export function FiltersClientSide(props: {
     const { tags, chosenTags: rawChosenTags } = props;
 
     const chosenTags = tags.filter((tag) => rawChosenTags.includes(tag.name));
+    const unChosenTags = tags.filter((tag) => !rawChosenTags.includes(tag.name));
 
     const category_labels: Record<ActivityTagType, string> = {
         ACTIVITY_TYPE: "Typ aktivity",
@@ -113,6 +122,7 @@ export function FiltersClientSide(props: {
                         <ClickableTagList
                             tags={tags.filter((tag) => tag.type == key)}
                             action="select"
+                            disabled={chosenTags}
                         />
                     </div>
                 ))}

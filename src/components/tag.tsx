@@ -1,11 +1,16 @@
 import type { ActivityTag } from "generated/prisma";
 
-export function Tag({ tag }: { tag: ActivityTag }) {
+export function Tag({ tag, overwriteBorderColor, overwriteBackgroundColor, textColor, italicFont }: { tag: ActivityTag, overwriteBorderColor?: string, overwriteBackgroundColor?:string, textColor?: string, italicFont?:boolean }) {
+    const borderColor = overwriteBorderColor ?? tag.tagColor;
+    const backgroundColor = overwriteBackgroundColor ?? `rgb(from ${borderColor} r g b / 0.3)`;
+    const textColor_ = textColor ?? "#000000"
     return (
         <div
             style={{
-                background: `rgb(from ${tag.tagColor} r g b / 0.3)`,
-                borderColor: tag.tagColor,
+                background: backgroundColor,
+                borderColor: borderColor,
+                color: textColor_,
+                fontStyle: italicFont ? "italic" : "normal"
             }}
             className="rounded-md border-2 px-1"
         >
