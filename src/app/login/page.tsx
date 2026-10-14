@@ -13,11 +13,14 @@ export default function LoginPage() {
     const router = useRouter();
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [errorMsg, setErrorMsg] = useState<string>("");
 
     async function login() {
         const { data, error } = await signIn({ username, password });
-        if (error)
+        if (error){
             console.error(`signIn returned error: ${error}`);
+            setErrorMsg(`Chyba: ${error.message ?? "Neznáma chyba"}`);
+        }
         console.log(`signIn returned data: ${data}`);
         if (!error)
             router.push('/account')
@@ -37,7 +40,7 @@ export default function LoginPage() {
 
                 <Input label="Heslo" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
-                {password && password.length > 5 && <p className="text-red-600 italic text-sm">Chyba: Heslo je už použité</p>}
+                {errorMsg && <p className="text-red-600 italic text-sm">{errorMsg}</p>}
 
                 <button type="submit" className="rounded-md border-2 border-slsk-blue-dark text-slsk-blue-dark hover:bg-slsk-blue-dark hover:text-white transition-all duration-150 text-xl cursor-pointer" disabled={!allowSubmit()}>Prihlásiť sa</button>
 

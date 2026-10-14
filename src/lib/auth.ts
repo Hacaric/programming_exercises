@@ -1,5 +1,6 @@
 "use client";
 import { prisma } from "lib/prisma";
+// import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { authClient } from "~/server/better-auth/client";
 
@@ -14,13 +15,13 @@ export async function signIn({
         {
             username,
             password,
-        },
-        {
-            onSuccess: redirect("/"),
+            callbackURL: "/"
         },
     );
     if (error) 
         console.error(`Error signing in: ${JSON.stringify(error)}`)
+    else
+        console.log(`User ${username} signed in`)
     return { data, error };
 }
 
