@@ -56,45 +56,67 @@ function deleteTagFilter(
     router.push(`?${params.toString()}`);
 }
 
-export function ClickableTagList(props: {
+export function ClickableTagList_Selected(props: {
     tags: ActivityTag[];
-    action: "select" | "deselect";
-    disabled?: ActivityTag[];
 }) {
     const searchParams = useSearchParams();
     const router = useRouter();
-    const { tags, action, disabled: disabled_raw } = props;
-    const disabled: Set<ActivityTag> = disabled_raw
-        ? new Set(disabled_raw)
-        : new Set();
+    const { tags } = props;
 
     return (
         <div className="flex flex-wrap gap-0.5">
             {tags.map((tag) => {
-                const is_disabled = disabled.has(tag);
+                return (
+                    <button
+                        onClick={()=>deleteTagFilter(tag, searchParams, router) }
+                        className="cursor-pointer"
+                        key={tag.name}
+                    >
+                        <Tag
+                            tag={tag}
+                        />
+                    </button>
+                );
+            })}
+        </div>
+    );
+}
+
+
+export function ClickableTagList_All(props: {
+    tags: ActivityTag[];
+    chosen_tags: Set<ActivityTag>;
+}) {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const { tags, chosen_tags } = props;
+
+    return (
+        <div className="flex flex-wrap gap-0.5">
+            {tags.map((tag) => {
+                const is_chosen = chosen_tags.has(tag);
                 return (
                     <button
                         onClick={
-                            action == "select" && !is_disabled
-                                ? () => addTagFilter(tag, searchParams, router)
-                                : () =>
-                                      deleteTagFilter(tag, searchParams, router)
+                            is_chosen
+                                ? () => deleteTagFilter(tag, searchParams, router)
+                                : () => addTagFilter(tag, searchParams, router)
                         }
                         className={
-                            is_disabled ? `cursor-pointer` : `cursor-pointer`
+                            is_chosen ? `cursor-pointer` : `cursor-pointer`
                         }
                         key={tag.name}
                     >
                         <Tag
                             tag={tag}
                             overwriteBorderColor={
-                                is_disabled ? "#bbb" : undefined
+                                is_chosen ? "#bbb" : undefined
                             }
                             overwriteBackgroundColor={
-                                is_disabled ? "#f0f0f0" : undefined
+                                is_chosen ? "#f0f0f0" : undefined
                             }
-                            textColor={is_disabled ? "#222" : undefined}
-                            italicFont={is_disabled}
+                            textColor={is_chosen ? "#222" : undefined}
+                            italicFont={is_chosen}
                         />
                     </button>
                 );
@@ -131,7 +153,7 @@ export function FiltersClientSide(props: {
                         Vybrané parametre:
                     </h4>
                     <div className="flex flex-wrap gap-px">
-                        <ClickableTagList tags={chosenTags} action="deselect" />
+                        <ClickableTagList_Selected tags={chosenTags} />
                     </div>
                 </>
             )}
@@ -140,10 +162,9 @@ export function FiltersClientSide(props: {
                 {Object.entries(category_labels).map(([key, label]) => (
                     <div key={key}>
                         <h6 className="font-semibold">{label}:</h6>
-                        <ClickableTagList
+                        <ClickableTagList_All
                             tags={tags.filter((tag) => tag.type == key)}
-                            action="select"
-                            disabled={chosenTags}
+                            chosen_tags={new Set(chosenTags)}
                         />
                     </div>
                 ))}
