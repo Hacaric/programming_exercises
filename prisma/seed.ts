@@ -104,7 +104,6 @@ async function main() {
         ],
     });
 
-
     // Ensure a creator user exists
     const user = await prisma.user.upsert({
         where: { id: "system" },
@@ -124,9 +123,9 @@ async function main() {
             id: "admin",
             name: "admin",
             username: "admin",
-            email: "ustredie+a@skauting.sk"
-        }
-    })
+            email: "ustredie+a@skauting.sk",
+        },
+    });
 
     // Create Activity with related activityProperites
     await prisma.activity.create({

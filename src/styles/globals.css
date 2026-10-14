@@ -19,3 +19,18 @@ layer(base);
     --color-slsk-brown: rgb(139, 91, 41);
     --color-slsk-sand: rgb(252, 233, 191);
 }
+
+@layer components {
+  .dropdown_item {
+    @apply z-1 float-left border-b w-full h-full py-1 justify-center px-2 cursor-pointer bg-slsk-blue-dark;
+  }
+  .dropdown_item_first {
+    @apply z-1 float-left border-b w-full h-full py-1 justify-center px-2 cursor-pointer bg-slsk-blue-dark rounded-t-xl;
+  }
+  .dropdown_item_last {
+    @apply z-1 float-left py-1 w-full h-full cursor-pointer bg-slsk-blue-dark rounded-b-xl px-2;
+  }
+  .dropdown_item:hover, .dropdown_item_last:hover, .dropdown_item_first:hover {
+    @apply bg-slsk-blue-mid
+  }
+}

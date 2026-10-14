@@ -2,8 +2,7 @@ import type { Session } from "better-auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "~/server/better-auth";
-import { authClient } from "~/server/better-auth/client";
-import { LogoutButton } from "./logout_button";
+import { LogoutButton } from "~/components/logout_button";
 
 // TODO: use native type
 export interface AuthSession {
@@ -29,21 +28,19 @@ export interface AuthSession {
     };
 }
 
-
 export default async function AccountPage() {
     const session: AuthSession | null = await auth.api.getSession({
         headers: await headers(), // Required to read session cookies
     });
 
     if (!session) {
-        redirect('/login');
+        redirect("/login");
     }
 
-
-    return <div>
-        <h2>Logged in as {session.user.username}</h2>
-        <LogoutButton session={session} />
-    </div>
+    return (
+        <div>
+            <h2>Logged in as {session.user.username}</h2>
+            <LogoutButton session={session} />
+        </div>
+    );
 }
-
-

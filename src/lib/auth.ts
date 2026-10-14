@@ -11,17 +11,13 @@ export async function signIn({
     username: string;
     password: string;
 }) {
-    const { data, error } = await authClient.signIn.username(
-        {
-            username,
-            password,
-            callbackURL: "/"
-        },
-    );
-    if (error) 
-        console.error(`Error signing in: ${JSON.stringify(error)}`)
-    else
-        console.log(`User ${username} signed in`)
+    const { data, error } = await authClient.signIn.username({
+        username,
+        password,
+        callbackURL: "/",
+    });
+    if (error) console.error(`Error signing in: ${JSON.stringify(error)}`);
+    else console.log(`User ${username} signed in`);
     return { data, error };
 }
 
@@ -40,8 +36,7 @@ export async function signUp({
         username,
         password,
     });
-    if (error)
-        console.log(`Error signing up: ${JSON.stringify(error)}`);
+    if (error) console.log(`Error signing up: ${JSON.stringify(error)}`);
     return { data, error };
 }
 
@@ -55,8 +50,7 @@ export async function signUp({
 
 // export async function client_getUserData() {
 //     const session = await client_getSession();
-//     if (!session) 
+//     if (!session)
 //         return null;
 //     return session.data?.user ?? null;
 // }
-

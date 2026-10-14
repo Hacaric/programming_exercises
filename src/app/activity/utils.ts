@@ -4,7 +4,9 @@ export function parseTagFilters(
     if (!tag_filters_raw) {
         return null;
     }
-    console.log(`Called parseTagFilters(${Array.isArray(tag_filters_raw) ? "Array: "+JSON.stringify(tag_filters_raw) : "String: "+tag_filters_raw})`);
+    console.log(
+        `Called parseTagFilters(${Array.isArray(tag_filters_raw) ? "Array: " + JSON.stringify(tag_filters_raw) : "String: " + tag_filters_raw})`,
+    );
     let tag_filters_parsed;
     if (Array.isArray(tag_filters_raw)) {
         tag_filters_parsed = tag_filters_raw;
@@ -12,7 +14,7 @@ export function parseTagFilters(
         try {
             tag_filters_parsed = JSON.parse(tag_filters_raw);
         } catch {
-            tag_filters_parsed = [tag_filters_raw]
+            tag_filters_parsed = [tag_filters_raw];
             // console.error(
             //     `Invalid search filter, ignoring: JSON failed to parse '${tag_filters_raw}'`,
             // );
@@ -31,6 +33,6 @@ export function parseTagFilters(
     if (!isValid) {
         return null;
     }
-    console.log(`Returning: ${JSON.stringify(tag_filters_parsed)}`)
+    console.log(`Returning: ${JSON.stringify(tag_filters_parsed)}`);
     return tag_filters_parsed;
 }

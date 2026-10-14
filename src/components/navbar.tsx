@@ -1,10 +1,13 @@
 import { headers } from "next/headers";
 import { auth } from "~/server/better-auth";
+import type { Session, User } from "better-auth";
+import { AccountOptions } from "./account_options_dropdown";
 
 export async function Navbar() {
-    const session = await auth.api.getSession({
-        headers: await headers(), // Required to read session cookies
-    });
+    const authSession: { session: Session; user: User } | null =
+        await auth.api.getSession({
+            headers: await headers(), // Required to read session cookies
+        });
     // console.log(`\n\n[debug] Session: ${JSON.stringify(session)}\n\n`)
 
     // TODO: make this a tailwindcss class
@@ -12,7 +15,7 @@ export async function Navbar() {
         "cursor-pointer hover:text-slsk-yellow transition-colors duration-100";
 
     return (
-        <div className="bg-slsk-blue-dark sticky top-0 flex h-16 items-center gap-5 p-2 px-4 font-bold text-white">
+        <div className="bg-slsk-blue-dark sticky top-0 flex h-16 items-center gap-5 overflow-visible p-2 px-4 font-bold text-white">
             <a href="/" className="content-center">
                 <img
                     src="/logo.png"
@@ -35,11 +38,9 @@ export async function Navbar() {
                 </a>
             </div>
 
-            
             <div className="flex-1"></div>
-            
-            
-            {!session && 
+
+            {!authSession && (
                 <div className="flex-none">
                     <a href="/login" className={linkStyle + " mr-5"}>
                         Login
@@ -48,12 +49,13 @@ export async function Navbar() {
                         Register
                     </a>
                 </div>
-            }
-            {session &&
-                <div>
-                    <a href="/account">Logged in as {session?.user.name}</a>
-                </div>
-            }
+            )}
+            {authSession && (
+                <AccountOptions
+                    session={authSession.session}
+                    user={authSession.user}
+                />
+            )}
         </div>
     );
 }

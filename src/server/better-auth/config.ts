@@ -7,10 +7,7 @@ import { db } from "~/server/db";
 
 export const auth = betterAuth({
     baseURL: {
-        allowedHosts: [
-            "localhost:3000",
-            "hry.skauting.sk",
-        ]
+        allowedHosts: ["localhost:3000", "hry.skauting.sk"],
     },
     database: prismaAdapter(db, {
         provider: "mysql", // or "sqlite" or "mysql"
