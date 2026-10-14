@@ -1,6 +1,5 @@
 "use client";
 
-import type { AuthSession } from "../app/account/page";
 import { authClient } from "~/server/better-auth/client";
 import type { Session, User } from "better-auth";
 import {
@@ -11,6 +10,7 @@ import {
     type SetStateAction,
 } from "react";
 import { useRouter } from "next/navigation";
+import type { AuthSession } from "~/app/account/page";
 
 async function Logout(session: AuthSession) {
     await authClient.revokeSession(session.session);

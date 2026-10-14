@@ -1,8 +1,9 @@
+//@ts-ignore
 import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
-import { Navbar } from "~/components/navbar";
+import { Navbar } from "~/components/navbar/navbar";
 
 export const metadata: Metadata = {
     title: "Skauské hry a aktivity",
