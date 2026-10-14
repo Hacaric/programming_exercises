@@ -6,11 +6,18 @@ import { getActivitiesFromRawFilters } from "./actions";
 import { ActivityCard } from "~/components/activitycard";
 import type { ActivityWithTags } from "~/lib/types";
 
+// TODO: FIX useEffect is causing infinite render lookup, likely because it updates its dependencies
+
 export function ActivityList(props: { initialData: ActivityWithTags[] }) {
     const { initialData } = props;
     const searchParams = useSearchParams();
     const query = searchParams.get("q") || "";
-    const tag_filters_raw = searchParams.get("tag_filters") || "";
+    const tag_filters_raw = searchParams.getAll("tag_filters") || "";
+
+    // This is because tag_filter_raw will get new array every call, which will trigger infinite loop of useEffect, because the dependency is always changing
+    // Thank god for AI, it would be hell to debug if I couln't use it. Chat: https://share.gemini.google/LHohmUC3x29m
+    const tag_filters_key = JSON.stringify(tag_filters_raw);
+    console.log(`tag_filters_raw: ${tag_filters_raw}`)
 
     const [activities, setActivities] =
         useState<ActivityWithTags[]>(initialData);
@@ -22,7 +29,7 @@ export function ActivityList(props: { initialData: ActivityWithTags[] }) {
                 await getActivitiesFromRawFilters(query, tag_filters_raw),
             );
         });
-    }, [query, tag_filters_raw]);
+    }, [query, tag_filters_key]);
     return (
         <div className="flex flex-wrap gap-2">
             {isPending && <p>Loading...</p>}

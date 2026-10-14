@@ -83,7 +83,7 @@ export async function GetActivitiesFiltered(
     query: string | null,
     accepted_activites?: ActivityWithTags[],
 ): Promise<ActivityWithTags[]> {
-    console.debug(`Getting activities...`);
+    console.debug(`Filtering activities...`);
 
     let all_activities: ActivityWithTags[];
     if (!accepted_activites) all_activities = await getActivitiesWithTags();
@@ -96,7 +96,8 @@ export async function GetActivitiesFiltered(
         .filter(({ score }) => score > 0)
         .sort((a, b) => b.score - a.score)
         .map(({ activity }) => activity);
-
+    
+    console.debug(`[SERVER] GetActivitiesFiltered() returning ${JSON.stringify(activities.map(a=>a.name))}`)
     return activities;
 }
 
@@ -129,12 +130,14 @@ function findElementsContainedInEveryArray<T>(...arrays: T[][]): T[] {
 
 export async function getActivitiesFromRawFilters(
     query: string | null,
-    tag_filters_raw: string | null,
+    tag_filters_raw: string | string[] | null,
 ): Promise<ActivityWithTags[]> {
-    let tag_filters_parsed = parseTagFilters(tag_filters_raw);
+    console.debug(`[SERVER] Called getActivitiesFromRawFilters() with params: query=${query}, tag_filters_raw=${tag_filters_raw}`)
+    let tag_filters_parsed: string[] | null = parseTagFilters(tag_filters_raw);
     if (!tag_filters_parsed || tag_filters_parsed.length == 0) {
         return await GetActivitiesFiltered(query);
     }
+    console.debug(`[SERVER] getActivityFromRawFilters(): Parsed filters: ${JSON.stringify(tag_filters_parsed)}`)
 
     const activities = await prisma.activity.findMany({
         where: {
@@ -150,6 +153,8 @@ export async function getActivitiesFromRawFilters(
             tags: true,
         },
     });
+
+    console.debug(`[SERVER] getActivityFromRawFilters(): Got filtered activites: ${JSON.stringify(activities.map(a=>a.name))}`)
 
     return await GetActivitiesFiltered(query, activities);
 }
