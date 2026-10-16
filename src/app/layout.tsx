@@ -34,7 +34,7 @@ export default function RootLayout({
                     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=schedule"
                 />
             </head>
-            <body>
+            <body className="min-h-screen min-w-screen">
                 <div className="flex flex-col gap-2">
                     <Navbar />
                     <div id="content" className="p-2">
