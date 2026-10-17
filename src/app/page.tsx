@@ -12,12 +12,12 @@ export interface PageProps_ {
 
 export default async function ListActivities({ searchParams }: PageProps_) {
     const session = await auth.api.getSession({
-        headers: await headers()
-    })
+        headers: await headers(),
+    });
     const loggedIn = !(session === null);
 
     const searchParamsAwaited = await searchParams;
-    let activities: (ActivityWithTags & {isStarred: boolean})[] = [];
+    let activities: (ActivityWithTags & { isStarred: boolean })[] = [];
 
     if (searchParamsAwaited) {
         let query: string[] | string | null = searchParamsAwaited["q"] ?? null;

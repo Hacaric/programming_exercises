@@ -119,9 +119,9 @@ export function AccountOptions(props: { session: Session; user: User }) {
         <div className="inline-block" ref={ref}>
             <div
                 className="relative inline-block cursor-pointer px-5"
-                onClick={()=>setDropdownVisible(!dropdownVisible)}
+                onClick={() => setDropdownVisible(!dropdownVisible)}
             >
-            {user.name}
+                {user.name}
             </div>
             {dropdownVisible && (
                 <DropDownContent authSession={{ session, user }} />

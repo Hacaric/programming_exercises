@@ -86,7 +86,7 @@ function scoreQueryMatches(activity: Activity, query: string | null): number {
 export async function GetActivitiesFiltered(
     query: string | null,
     accepted_activites?: ActivityWithTags[],
-): Promise<(ActivityWithTags & {isStarred: boolean})[]> {
+): Promise<(ActivityWithTags & { isStarred: boolean })[]> {
     console.debug(`Filtering activities...`);
 
     let all_activities: ActivityWithTags[];
@@ -102,29 +102,37 @@ export async function GetActivitiesFiltered(
         .map(({ activity }) => activity);
 
     const session = await auth.api.getSession({
-        headers: await headers()
-    })
+        headers: await headers(),
+    });
     const userId: string | null = session?.user.id ?? null;
-    let activitiesWithStarData: (ActivityWithTags & {isStarred: boolean})[];
+    let activitiesWithStarData: (ActivityWithTags & { isStarred: boolean })[];
     if (userId) {
         const starredAcitivities = new Set(
-            (await prisma.userActivityStart.findMany({
-                where: {
-                    userID: userId
-                }
-            })).map(data => data.activityID) // We already know that these stars belong to current user, drop them to facilitate hashset lookup
-        )
-        activitiesWithStarData = activities.map((activity: ActivityWithTags) => {
-            const isStarred = starredAcitivities.has(activity.id); // THE ANSWER IS HASHMAP :fire: :fire: :fire:  ... again
-            return {...activity, isStarred: isStarred} // Add isStarred to the mess!
-        })
+            (
+                await prisma.userActivityStart.findMany({
+                    where: {
+                        userID: userId,
+                    },
+                })
+            ).map((data) => data.activityID), // We already know that these stars belong to current user, drop them to facilitate hashset lookup
+        );
+        activitiesWithStarData = activities.map(
+            (activity: ActivityWithTags) => {
+                const isStarred = starredAcitivities.has(activity.id); // THE ANSWER IS HASHMAP :fire: :fire: :fire:  ... again
+                return { ...activity, isStarred: isStarred }; // Add isStarred to the mess!
+            },
+        );
     } else {
-        activitiesWithStarData = activities.map((activity: ActivityWithTags) => {
-            return {...activity, isStarred: false}
-        })
+        activitiesWithStarData = activities.map(
+            (activity: ActivityWithTags) => {
+                return { ...activity, isStarred: false };
+            },
+        );
     }
-    
-    console.debug(`[SERVER] GetActivitiesFiltered() returning ${JSON.stringify(activities.map(a=>a.name))}`)
+
+    console.debug(
+        `[SERVER] GetActivitiesFiltered() returning ${JSON.stringify(activities.map((a) => a.name))}`,
+    );
     return activitiesWithStarData;
 }
 
@@ -158,13 +166,17 @@ function findElementsContainedInEveryArray<T>(...arrays: T[][]): T[] {
 export async function getActivitiesFromRawFilters(
     query: string | null,
     tag_filters_raw: string | string[] | null,
-): Promise<(ActivityWithTags & {isStarred: boolean})[]> {
-    console.debug(`[SERVER] Called getActivitiesFromRawFilters() with params: query=${query}, tag_filters_raw=${tag_filters_raw}`)
+): Promise<(ActivityWithTags & { isStarred: boolean })[]> {
+    console.debug(
+        `[SERVER] Called getActivitiesFromRawFilters() with params: query=${query}, tag_filters_raw=${tag_filters_raw}`,
+    );
     let tag_filters_parsed: string[] | null = parseTagFilters(tag_filters_raw);
     if (!tag_filters_parsed || tag_filters_parsed.length == 0) {
         return await GetActivitiesFiltered(query);
     }
-    console.debug(`[SERVER] getActivityFromRawFilters(): Parsed filters: ${JSON.stringify(tag_filters_parsed)}`)
+    console.debug(
+        `[SERVER] getActivityFromRawFilters(): Parsed filters: ${JSON.stringify(tag_filters_parsed)}`,
+    );
 
     const activities = await prisma.activity.findMany({
         where: {
@@ -181,24 +193,30 @@ export async function getActivitiesFromRawFilters(
         },
     });
 
-    console.debug(`[SERVER] getActivityFromRawFilters(): Got filtered activites: ${JSON.stringify(activities.map(a=>a.name))}`)
+    console.debug(
+        `[SERVER] getActivityFromRawFilters(): Got filtered activites: ${JSON.stringify(activities.map((a) => a.name))}`,
+    );
 
     return await GetActivitiesFiltered(query, activities);
 }
 
-export async function server_setIsStarred(activityID: number, state: boolean): Promise<boolean | null> {
+export async function server_setIsStarred(
+    activityID: number,
+    state: boolean,
+): Promise<boolean | null> {
     const session = await auth.api.getSession({
-        headers: await headers()
-    })
+        headers: await headers(),
+    });
     if (!session) {
         return null;
     }
     if (state === true) {
         await prisma.userActivityStart.upsert({
-            where: {userID_activityID: {
-                userID: session.user.id,
-                activityID: activityID,
-                }
+            where: {
+                userID_activityID: {
+                    userID: session.user.id,
+                    activityID: activityID,
+                },
             },
             update: {
                 userID: session.user.id,
@@ -208,7 +226,7 @@ export async function server_setIsStarred(activityID: number, state: boolean): P
                 userID: session.user.id,
                 activityID: activityID,
             },
-        })
+        });
     } else {
         // Try-catch... prisma.*.delete will always throw, so to keep this a single query, I'm using try-catch
         // Source: https://github.com/prisma/orm/discussions/8382#discussioncomment-1035833
@@ -218,12 +236,13 @@ export async function server_setIsStarred(activityID: number, state: boolean): P
                     userID_activityID: {
                         userID: session.user.id,
                         activityID: activityID,
-                    }
-                }
-            })
-        } catch { /* do nothing */ }
+                    },
+                },
+            });
+        } catch {
+            /* do nothing */
+        }
     }
 
     return state;
 }
-

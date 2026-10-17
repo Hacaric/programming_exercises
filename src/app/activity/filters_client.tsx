@@ -56,9 +56,7 @@ function deleteTagFilter(
     router.push(`?${params.toString()}`);
 }
 
-export function ClickableTagList_Selected(props: {
-    tags: ActivityTag[];
-}) {
+export function ClickableTagList_Selected(props: { tags: ActivityTag[] }) {
     const searchParams = useSearchParams();
     const router = useRouter();
     const { tags } = props;
@@ -68,20 +66,19 @@ export function ClickableTagList_Selected(props: {
             {tags.map((tag) => {
                 return (
                     <button
-                        onClick={()=>deleteTagFilter(tag, searchParams, router) }
+                        onClick={() =>
+                            deleteTagFilter(tag, searchParams, router)
+                        }
                         className="cursor-pointer"
                         key={tag.name}
                     >
-                        <Tag
-                            tag={tag}
-                        />
+                        <Tag tag={tag} />
                     </button>
                 );
             })}
         </div>
     );
 }
-
 
 export function ClickableTagList_All(props: {
     tags: ActivityTag[];
@@ -99,7 +96,8 @@ export function ClickableTagList_All(props: {
                     <button
                         onClick={
                             is_chosen
-                                ? () => deleteTagFilter(tag, searchParams, router)
+                                ? () =>
+                                      deleteTagFilter(tag, searchParams, router)
                                 : () => addTagFilter(tag, searchParams, router)
                         }
                         className={
