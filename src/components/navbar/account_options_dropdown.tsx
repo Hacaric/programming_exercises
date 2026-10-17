@@ -97,14 +97,32 @@ export function AccountOptions(props: { session: Session; user: User }) {
     const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
 
     const { session, user } = props;
+    const ref = useRef<HTMLDivElement>(null);
 
+    // Hey, developer... Yes, you! Are you rewriting handle-click-outside-of-element elsewhere?
+    // Consider looking at this (general implementation of detect-click-outside-element or smth idk, go read it): https://stackoverflow.com/a/54570068
+    useEffect(() => {
+        document.body.addEventListener("click", (event) => {
+            if (ref.current && !ref.current.contains(event.target as Node)) {
+                setDropdownVisible(false); // If user clicks outsithe to toggle button, close the dropdown menu
+            }
+        });
+
+        // ESC key press closes the dropdown menu
+        document.body.addEventListener("keydown", (event) => {
+            if (event.key == "Escape") {
+                setDropdownVisible(false);
+            }
+        });
+    });
     return (
-        <div className="inline-block">
-            <DropDownButton
-                username={user.name}
-                dropdownVisible={dropdownVisible}
-                setDropdownVisible={setDropdownVisible}
-            />
+        <div className="inline-block" ref={ref}>
+            <div
+                className="relative inline-block cursor-pointer px-5"
+                onClick={()=>setDropdownVisible(!dropdownVisible)}
+            >
+            {user.name}
+            </div>
             {dropdownVisible && (
                 <DropDownContent authSession={{ session, user }} />
             )}
