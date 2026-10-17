@@ -4,6 +4,10 @@ import { prisma } from "lib/prisma";
 import { parseTagFilters } from "./utils";
 import type { ActivityWithTags } from "~/lib/types";
 import { getActivitiesWithTags } from "~/lib/activity";
+import { auth } from "~/lib/auth";
+import { headers } from "next/headers";
+import type { ActivitiesWithStarData } from "./activitylist";
+import { authClient } from "~/server/better-auth/client";
 // import { ActivityTagFilter, handleTagClick } from "./tagFilterClick";
 
 /**
@@ -82,23 +86,46 @@ function scoreQueryMatches(activity: Activity, query: string | null): number {
 export async function GetActivitiesFiltered(
     query: string | null,
     accepted_activites?: ActivityWithTags[],
-): Promise<ActivityWithTags[]> {
+): Promise<(ActivityWithTags & {isStarred: boolean})[]> {
     console.debug(`Filtering activities...`);
 
     let all_activities: ActivityWithTags[];
     if (!accepted_activites) all_activities = await getActivitiesWithTags();
     else all_activities = accepted_activites;
 
-    const activities = all_activities
+    let activities = all_activities
         .map((activity) => {
             return { activity, score: scoreQueryMatches(activity, query) };
         })
         .filter(({ score }) => score > 0)
         .sort((a, b) => b.score - a.score)
         .map(({ activity }) => activity);
+
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+    const userId: string | null = session?.user.id ?? null;
+    let activitiesWithStarData: (ActivityWithTags & {isStarred: boolean})[];
+    if (userId) {
+        const starredAcitivities = new Set(
+            (await prisma.userActivityStart.findMany({
+                where: {
+                    userID: userId
+                }
+            })).map(data => data.activityID) // We already know that these stars belong to current user, drop them to facilitate hashset lookup
+        )
+        activitiesWithStarData = activities.map((activity: ActivityWithTags) => {
+            const isStarred = starredAcitivities.has(activity.id); // THE ANSWER IS HASHMAP :fire: :fire: :fire:  ... again
+            return {...activity, isStarred: isStarred} // Add isStarred to the mess!
+        })
+    } else {
+        activitiesWithStarData = activities.map((activity: ActivityWithTags) => {
+            return {...activity, isStarred: false}
+        })
+    }
     
     console.debug(`[SERVER] GetActivitiesFiltered() returning ${JSON.stringify(activities.map(a=>a.name))}`)
-    return activities;
+    return activitiesWithStarData;
 }
 
 export async function GetAllActivities() {
@@ -131,7 +158,7 @@ function findElementsContainedInEveryArray<T>(...arrays: T[][]): T[] {
 export async function getActivitiesFromRawFilters(
     query: string | null,
     tag_filters_raw: string | string[] | null,
-): Promise<ActivityWithTags[]> {
+): Promise<(ActivityWithTags & {isStarred: boolean})[]> {
     console.debug(`[SERVER] Called getActivitiesFromRawFilters() with params: query=${query}, tag_filters_raw=${tag_filters_raw}`)
     let tag_filters_parsed: string[] | null = parseTagFilters(tag_filters_raw);
     if (!tag_filters_parsed || tag_filters_parsed.length == 0) {
@@ -158,3 +185,45 @@ export async function getActivitiesFromRawFilters(
 
     return await GetActivitiesFiltered(query, activities);
 }
+
+export async function server_setIsStarred(activityID: number, state: boolean): Promise<boolean | null> {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+    if (!session) {
+        return null;
+    }
+    if (state === true) {
+        await prisma.userActivityStart.upsert({
+            where: {userID_activityID: {
+                userID: session.user.id,
+                activityID: activityID,
+                }
+            },
+            update: {
+                userID: session.user.id,
+                activityID: activityID,
+            },
+            create: {
+                userID: session.user.id,
+                activityID: activityID,
+            },
+        })
+    } else {
+        // Try-catch... prisma.*.delete will always throw, so to keep this a single query, I'm using try-catch
+        // Source: https://github.com/prisma/orm/discussions/8382#discussioncomment-1035833
+        try {
+            await prisma.userActivityStart.delete({
+                where: {
+                    userID_activityID: {
+                        userID: session.user.id,
+                        activityID: activityID,
+                    }
+                }
+            })
+        } catch { /* do nothing */ }
+    }
+
+    return state;
+}
+

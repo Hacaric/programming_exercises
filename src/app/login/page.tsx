@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState, type InputHTMLAttributes } from "react";
-import { signIn, signUp } from "~/lib/auth";
+import { signIn, signUp } from "~/lib/auth-client";
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 function validateEmailAddress(email: string): boolean {

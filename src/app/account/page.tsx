@@ -1,8 +1,8 @@
 import type { Session } from "better-auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { LogoutButton } from "~/components/navbar/logout_button";
 import { auth } from "~/server/better-auth";
-import { LogoutButton } from "~/components/logout_button";
 
 // TODO: use native type
 export interface AuthSession {

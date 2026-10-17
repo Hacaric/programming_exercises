@@ -48,6 +48,8 @@ model Activity {
 
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
+
+    stars       UserActivityStart[]
 }
 
 model Post {
@@ -76,8 +78,20 @@ model User {
     posts             Post[]
     createdActivities Activity[]
 
+    stars             UserActivityStart[]
+
     @@unique([email])
     @@map("user")
+}
+
+model UserActivityStart {
+    user              User  @relation(fields: [userID], references: [id])
+    userID            String
+
+    activity          Activity @relation(fields: [activityID], references: [id])
+    activityID        Int
+
+    @@id([userID, activityID])
 }
 
 model Session {

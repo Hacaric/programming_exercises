@@ -3,14 +3,21 @@ import { SearchBar } from "./searchbar";
 import { ActivityList } from "./activitylist";
 import { Filters } from "./filters_server";
 import type { ActivityWithTags } from "~/lib/types";
+import { auth } from "~/lib/auth";
+import { headers } from "next/headers";
 
 export interface PageProps_ {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function ListActivities({ searchParams }: PageProps_) {
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+    const loggedIn = !(session === null);
+
     const searchParamsAwaited = await searchParams;
-    let activities: ActivityWithTags[] = [];
+    let activities: (ActivityWithTags & {isStarred: boolean})[] = [];
 
     if (searchParamsAwaited) {
         let query: string[] | string | null = searchParamsAwaited["q"] ?? null;
@@ -38,7 +45,7 @@ export default async function ListActivities({ searchParams }: PageProps_) {
             </div>
             <div className="flex flex-5 flex-col gap-2">
                 <SearchBar />
-                <ActivityList initialData={activities} />
+                <ActivityList initialData={activities} loggedIn={loggedIn} />
             </div>
         </div>
     );
