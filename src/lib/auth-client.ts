@@ -6,14 +6,14 @@ import z from "zod";
 import { authClient } from "~/server/better-auth/client";
 
 export async function signIn({
-    username_UNSAFE,
-    password_UNSAFE,
+    username,
+    password,
 }: {
-    username_UNSAFE: string;
-    password_UNSAFE: string;
+    username: string;
+    password: string;
 }) {
-    const username: string = z.string().parse(username_UNSAFE);
-    const password: string = z.string().parse(password_UNSAFE);
+    username = z.string().parse(username);
+    password = z.string().parse(password);
 
     const { data, error } = await authClient.signIn.username({
         username,
@@ -26,17 +26,17 @@ export async function signIn({
 }
 
 export async function signUp({
-    email_UNSAFE,
-    username_UNSAFE,
-    password_UNSAFE,
+    email,
+    username,
+    password,
 }: {
-    email_UNSAFE: string;
-    username_UNSAFE: string;
-    password_UNSAFE: string;
+    email: string;
+    username: string;
+    password: string;
 }) {
-    const email: string = z.string().parse(email_UNSAFE);
-    const username: string = z.string().parse(username_UNSAFE);
-    const password: string = z.string().parse(password_UNSAFE);
+    email = z.string().parse(email);
+    username = z.string().parse(username);
+    password = z.string().parse(password);
 
     const { data, error } = await authClient.signUp.email({
         email,

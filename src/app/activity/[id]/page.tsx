@@ -8,7 +8,8 @@ export default async function ActivityDetail({
 }: {
     params: { id: string };
 }) {
-    const { id: id_raw } = params;
+    // Awaiting to get rid of better-auth warn
+    const { id: id_raw } = await params;
     const id = Number(id_raw);
     if (isNaN(id)) {
         return (
