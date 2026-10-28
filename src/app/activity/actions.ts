@@ -6,7 +6,7 @@ import { ActivityWithTagsSchema, type ActivityWithTags } from "~/lib/types";
 import { getActivitiesWithTags } from "~/lib/activity";
 import { auth } from "~/lib/auth";
 import { headers } from "next/headers";
-import { z } from 'zod';
+import { z } from "zod";
 import type { ActivitiesWithStarData } from "./activitylist";
 import { authClient } from "~/server/better-auth/client";
 // import { ActivityTagFilter, handleTagClick } from "./tagFilterClick";
@@ -88,9 +88,13 @@ export async function GetActivitiesFiltered(
     query_UNSAFE: string | null,
     accepted_activites_UNSAFE?: ActivityWithTags[],
 ): Promise<(ActivityWithTags & { isStarred: boolean })[]> {
-    console.log(`GetActivitiesFiltered(query_RAW=${query_UNSAFE}, accepted_activites_RAW=${JSON.stringify(accepted_activites_UNSAFE)})`)
+    console.log(
+        `GetActivitiesFiltered(query_RAW=${query_UNSAFE}, accepted_activites_RAW=${JSON.stringify(accepted_activites_UNSAFE)})`,
+    );
     const query = z.union([z.string(), z.null()]).parse(query_UNSAFE);
-    const accepted_activites: ActivityWithTags[] | undefined = z.optional(z.array(ActivityWithTagsSchema)).parse(accepted_activites_UNSAFE);
+    const accepted_activites: ActivityWithTags[] | undefined = z
+        .optional(z.array(ActivityWithTagsSchema))
+        .parse(accepted_activites_UNSAFE);
     console.debug(`Filtering activities...`);
 
     let all_activities: ActivityWithTags[];
@@ -171,8 +175,12 @@ export async function getActivitiesFromRawFilters(
     query_UNSAFE: string | null,
     tag_filters_raw_UNSAFE: string | string[] | null,
 ): Promise<(ActivityWithTags & { isStarred: boolean })[]> {
-    const query: string | null = z.union([z.string(), z.null()]).parse(query_UNSAFE);
-    const tag_filters_raw: string[] | string | null = z.union([z.array(z.string()), z.string(), z.null()]).parse(tag_filters_raw_UNSAFE);
+    const query: string | null = z
+        .union([z.string(), z.null()])
+        .parse(query_UNSAFE);
+    const tag_filters_raw: string[] | string | null = z
+        .union([z.array(z.string()), z.string(), z.null()])
+        .parse(tag_filters_raw_UNSAFE);
     console.debug(
         `[SERVER] Called getActivitiesFromRawFilters() with params: query=${query}, tag_filters_raw=${tag_filters_raw}`,
     );
@@ -213,7 +221,7 @@ export async function server_setIsStarred(
     const activityID: number = z.number().parse(activityID_UNSAFE);
     const state: boolean = z.boolean().parse(state_UNSAFE);
 
-    console.log(`setIsStarred(activityID: ${activityID}, state: ${state})`)
+    console.log(`setIsStarred(activityID: ${activityID}, state: ${state})`);
     const session = await auth.api.getSession({
         headers: await headers(),
     });

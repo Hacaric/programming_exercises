@@ -27,8 +27,7 @@ export default async function ActivityDetail({
         <div className="border-slsk-blue-dark flex flex-col gap-2 rounded-2xl border-2 p-5">
             <div className="text-align-center">
                 <h3 className="text-3xl font-bold">{activity.name}</h3>
-                {
-                }
+                {}
             </div>
             <div className="flex flex-wrap content-end gap-x-0.5 gap-y-1">
                 <Tags tags={activity.tags} />
