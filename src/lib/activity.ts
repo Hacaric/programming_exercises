@@ -3,9 +3,12 @@
 import type { Activity } from "generated/prisma";
 import { prisma } from "lib/prisma";
 import type { ActivityWithTags } from "./types";
+import z from "zod";
 
-export async function getActivity(id: number): Promise<Activity | null> {
-    const activity = prisma.activity.findUnique({ where: { id } });
+export async function getActivity(id_UNSAFE: number): Promise<Activity | null> {
+    const id: number = z.number().parse(id_UNSAFE);
+
+    const activity: Activity | null = await prisma.activity.findUnique({ where: { id } });
     if (!activity) {
         console.warn(`Queried activity not found! Activity ID: ${id}`);
         return null;
@@ -14,8 +17,10 @@ export async function getActivity(id: number): Promise<Activity | null> {
 }
 
 export async function getActivityWithTags(
-    id: number,
+    id_UNSAFE: number,
 ): Promise<ActivityWithTags | null> {
+    const id: number = z.number().parse(id_UNSAFE);
+
     const activity = prisma.activity.findUnique({
         where: { id },
         include: { tags: true },

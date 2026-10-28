@@ -2,15 +2,19 @@
 import { prisma } from "lib/prisma";
 // import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import z from "zod";
 import { authClient } from "~/server/better-auth/client";
 
 export async function signIn({
-    username,
-    password,
+    username_UNSAFE,
+    password_UNSAFE,
 }: {
-    username: string;
-    password: string;
+    username_UNSAFE: string;
+    password_UNSAFE: string;
 }) {
+    const username: string = z.string().parse(username_UNSAFE);
+    const password: string = z.string().parse(password_UNSAFE);
+
     const { data, error } = await authClient.signIn.username({
         username,
         password,
@@ -22,14 +26,18 @@ export async function signIn({
 }
 
 export async function signUp({
-    email,
-    username,
-    password,
+    email_UNSAFE,
+    username_UNSAFE,
+    password_UNSAFE,
 }: {
-    email: string;
-    username: string;
-    password: string;
+    email_UNSAFE: string;
+    username_UNSAFE: string;
+    password_UNSAFE: string;
 }) {
+    const email: string = z.string().parse(email_UNSAFE);
+    const username: string = z.string().parse(username_UNSAFE);
+    const password: string = z.string().parse(password_UNSAFE);
+
     const { data, error } = await authClient.signUp.email({
         email,
         name: username,
